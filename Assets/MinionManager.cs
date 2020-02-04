@@ -5,8 +5,8 @@ using PathCreation.Examples;
 
 public class MinionManager : MonoBehaviour
 {
-    public GameObject[] minions;
-    public GameObject leader;
+    public PathFollower[] minions;
+    public PathFollower leader;
 
     private void Start()
     {
@@ -20,9 +20,9 @@ public class MinionManager : MonoBehaviour
             leader = minions[newLeader];
             for (int i = 0; i < minions.Length; i++)
             {
-                minions[i].GetComponent<PathFollower>().Activate(i == newLeader);
-                minions[i].GetComponent<PathFollower>().leader = minions[newLeader];
-                minions[i].GetComponent<PathFollower>().isLeader = (i == newLeader);
+                minions[i].Activate(i == newLeader);
+                minions[i].leader = minions[newLeader].gameObject;
+                minions[i].isLeader = (i == newLeader);
             }
         }
     }
