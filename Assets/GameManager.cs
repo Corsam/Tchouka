@@ -13,11 +13,13 @@ public class GameManager : MonoBehaviour
     int currentRail = 0;
 
     public float speed0 = 0;
-    public float speed0_CoalConso = 0.5f;
+    public float speed0_CoalConso = 1;
     public float speed1 = 5;
-    public float speed1_CoalConso = 1;
+    public float speed1_CoalConso = 5;
     public float speed2 = 10;
-    public float speed2_CoalConso = 2;
+    public float speed2_CoalConso = 10;
+
+    public float coalReload = 20;
 
     bool canChangeTrack = true;
     float timerTrackChange = 0;
@@ -49,10 +51,13 @@ public class GameManager : MonoBehaviour
                 }
             }
 
+            //Tchou Tchou
             if (Input.GetButtonDown("Tchoutchou"))
             {
-                Debug.Log("TCHOU TCHOU EN FAIT MEC");
+                //Debug.Log("TCHOU TCHOU EN FAIT MEC");
+                train.LaunchTchouTchou();
             }
+
             if (Input.GetButtonDown("Slowmo"))
             {
                 Debug.Log("JE RALENTIS LE TEMPS PELO");
@@ -61,9 +66,12 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("OULA, ÇA RÉPARE COMME JAJA");
             }
+
+            //Recharge de charbon
             if (Input.GetButtonDown("Coal"))
             {
-                Debug.Log("JE CHARBONNE, MDR TU L'AS ?");
+                //Debug.Log("JE CHARBONNE, MDR TU L'AS ?");
+                train.RefillCoal(coalReload);
             }
 
             //Changement de rail
@@ -86,22 +94,21 @@ public class GameManager : MonoBehaviour
                 train.StopBrake();
             }
 
-
             //Gestion des différentes vitesses
             if (Input.GetButtonDown("Speed0"))
             {
                 train.SetSpeedLeverValue(speed0);
-                //train.SetCoalConso(speed0_CoalConso);
+                train.SetCoalConso(speed0_CoalConso);
             }
             if (Input.GetButtonDown("Speed1"))
             {
                 train.SetSpeedLeverValue(speed1);
-                //train.SetCoalConso(speed1_CoalConso);
+                train.SetCoalConso(speed1_CoalConso);
             }
             if (Input.GetButtonDown("Speed2"))
             {
                 train.SetSpeedLeverValue(speed2);
-                //train.SetCoalConso(speed2_CoalConso);
+                train.SetCoalConso(speed2_CoalConso);
             }
         }
         else if (state == GameState.Menu)
@@ -125,9 +132,6 @@ public class GameManager : MonoBehaviour
                 //bouger à droite
             }
         }
-
-        
-
     }
 
     void ChangeRail(int newRail)
