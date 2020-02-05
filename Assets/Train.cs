@@ -10,6 +10,7 @@ public class Train : MonoBehaviour
     public Image barFill;
     public Text speedDebugText;
     public GameObject tchouTchouDebug;
+    public Text healthDebugText;
 
     public GameObject tchouCollider;
 
@@ -20,6 +21,14 @@ public class Train : MonoBehaviour
 
     public float coalConso = 5;
     float currentCoalLevel = 95;
+
+    public int maxHealth = 5;
+    int currentHealth = 5;
+    public float healthMult_0 = 0.75f;
+    public int threshold_health = 2;
+    public float healthMult_1 = 1f;
+    float currentHealthMult = 1f;
+
 
     public float speedMult_0 = 0.5f;
     public Color barColor_0 = new Color(100, 0, 0);
@@ -33,6 +42,7 @@ public class Train : MonoBehaviour
     float currentSpeedMult = 1f;
 
     bool isBraking = false;
+
 
 
     void Update()
@@ -49,12 +59,17 @@ public class Train : MonoBehaviour
         }
         else
         {
-            currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult, speedChangeForce);
+            currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult, speedChangeForce);
         }
 
         mm.leader.speed = currentSpeed;
 
         speedDebugText.text = "Vitesse : " + (int)(currentSpeed * 2000) / 100 + " km/h";
+    }
+
+    public void Initialize()
+    {
+        UpdateHealthDisplay();
     }
 
     public void Brake()
@@ -101,12 +116,50 @@ public class Train : MonoBehaviour
         }
     }
 
+    void UpdateHealthMult()
+    {
+        if (currentHealth <= threshold_health)
+        {
+            currentHealthMult = healthMult_0;
+        }
+        else
+        {
+            currentHealthMult = healthMult_1;
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
+        UpdateHealthMult();
+        UpdateHealthDisplay();
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    void RepairHealth(int heal)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + heal, 0, maxHealth);
+        UpdateHealthMult();
+        UpdateHealthDisplay();
+    }
+
+    void Die()
+    {
+        Debug.Log("J'SUIS DEAD SA CHAKAL !");
+    }
+
+    void UpdateHealthDisplay()
+    {
+        healthDebugText.text = "Santé : " + currentHealth + " / " + maxHealth;
+    }
+
     public void LaunchTchouTchou()
     {
         StartCoroutine(TchouTchou());
     }
-
-    
 
     IEnumerator TchouTchou()
     {

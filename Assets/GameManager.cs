@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         train = trainGO.GetComponent<Train>();
+        train.SetSpeedLeverValue(speed1);
+        train.SetCoalConso(speed1_CoalConso);
+        train.Initialize();
     }
 
     void Update()

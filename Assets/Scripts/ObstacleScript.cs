@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class ObstacleScript : MonoBehaviour
 {
+    public int damage = 1;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            PlayerScript player = other.GetComponent<PlayerScript>();
-
-            player.speed = Mathf.Clamp(player.speed - 2, 0, 3);
-            player.realSpeed = Mathf.Clamp(player.speed - 1.5f, 0f, 5f);
-            Debug.Log("J'AI MAAAAAAAL");
+            Train train = other.GetComponent<Train>();
+            train.TakeDamage(damage);
+            Debug.Log("J'AI MAL DE " + damage);
         }
     }
 }
