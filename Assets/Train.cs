@@ -11,6 +11,8 @@ public class Train : MonoBehaviour
     public Text speedDebugText;
     public GameObject tchouTchouDebug;
 
+    public GameObject tchouCollider;
+
     public float currentSpeed;
     public float speedLeverValue = 5;
     public float brakeForce = 0.06f;
@@ -104,14 +106,16 @@ public class Train : MonoBehaviour
         StartCoroutine(TchouTchou());
     }
 
+    
+
     IEnumerator TchouTchou()
     {
         //Debug.Log("POUET EN FAIT");
 
-        tchouTchouDebug.SetActive(true);
+        tchouCollider.SetActive(true);
 
         yield return new WaitForSeconds(2f);
 
-        tchouTchouDebug.SetActive(false);
+        tchouCollider.SetActive(false);
     }
 }
