@@ -41,8 +41,13 @@ public class Train : MonoBehaviour
 
     float currentSpeedMult = 1f;
 
+    bool collided = false;
     bool isBraking = false;
     bool isReparing = false;
+
+    float timerCollision = 0f;
+    public float collisionBrakeTime = 1f;
+    public float collisionBrakeForce = 0.1f;
 
     public float timeNeeededToRepair = 3f;
     float timerRepairing = 0f;
@@ -55,11 +60,20 @@ public class Train : MonoBehaviour
         UpdateSpeedMult();
 
         //Vérifie si le frein est appuyé ou pas
-        if (isBraking)
+        
+        if (collided)
+        {
+            currentSpeed = Mathf.Lerp(currentSpeed, 0, collisionBrakeForce);
+            timerCollision += Time.deltaTime;
+            if (timerCollision >= collisionBrakeTime)
+            {
+                CollisionEnds();
+            }
+        }
+        else if (isBraking)
         {
             currentSpeed = Mathf.Lerp(currentSpeed, 0, brakeForce);
         }
-        else
         {
             currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult, speedChangeForce);
         }
@@ -88,6 +102,16 @@ public class Train : MonoBehaviour
     {
         UpdateHealthDisplay();
         RepairEnds();
+    }
+
+    public void Collision()
+    {
+        collided = true;
+    }
+
+    void CollisionEnds()
+    {
+        collided = false;
     }
 
     public void Brake()

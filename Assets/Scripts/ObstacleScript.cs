@@ -5,7 +5,6 @@ using UnityEngine;
 public class ObstacleScript : MonoBehaviour
 {
     public int damage = 1;
-    public float speedLoss = 30;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -13,6 +12,7 @@ public class ObstacleScript : MonoBehaviour
         {
             Train train = other.GetComponent<Train>();
             train.TakeDamage(damage);
+            train.Collision();
             Debug.Log("J'AI MAL DE " + damage);
         }
     }
