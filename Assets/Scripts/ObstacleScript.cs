@@ -5,6 +5,7 @@ using UnityEngine;
 public class ObstacleScript : MonoBehaviour
 {
     public int damage = 1;
+    public float speedLoss = 30;
 
     private void OnTriggerEnter(Collider other)
     {

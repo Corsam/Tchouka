@@ -65,9 +65,16 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("JE RALENTIS LE TEMPS PELO");
             }
+
+            //Système de réparation
             if (Input.GetButtonDown("Repair"))
             {
-                Debug.Log("OULA, ÇA RÉPARE COMME JAJA");
+                //Debug.Log("OULA, ÇA RÉPARE COMME JAJA");
+                train.RepairBegins();
+            }
+            if (Input.GetButtonUp("Repair"))
+            {
+                train.RepairEnds();
             }
 
             //Recharge de charbon
@@ -88,7 +95,7 @@ public class GameManager : MonoBehaviour
             }
 
             //Système de frain d'urgence
-            if (Input.GetButton("Brake"))
+            if (Input.GetButtonDown("Brake"))
             {
                 train.Brake();
             }

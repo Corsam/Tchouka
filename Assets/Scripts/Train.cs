@@ -7,6 +7,7 @@ public class Train : MonoBehaviour
     public MinionManager mm;
 
     public Slider coalBar;
+    public Slider repairBar;
     public Image barFill;
     public Text speedDebugText;
     public GameObject tchouTchouDebug;
@@ -29,7 +30,6 @@ public class Train : MonoBehaviour
     public float healthMult_1 = 1f;
     float currentHealthMult = 1f;
 
-
     public float speedMult_0 = 0.5f;
     public Color barColor_0 = new Color(100, 0, 0);
     public float threshold_1 = 20;
@@ -42,8 +42,10 @@ public class Train : MonoBehaviour
     float currentSpeedMult = 1f;
 
     bool isBraking = false;
+    bool isReparing = false;
 
-
+    public float timeNeeededToRepair = 3f;
+    float timerRepairing = 0f;
 
     void Update()
     {
@@ -65,11 +67,27 @@ public class Train : MonoBehaviour
         mm.leader.speed = currentSpeed;
 
         speedDebugText.text = "Vitesse : " + (int)(currentSpeed * 2000) / 100 + " km/h";
+
+        if (isReparing)
+        {
+            timerRepairing += Time.deltaTime;
+
+            if (timerRepairing >= timeNeeededToRepair)
+            {
+                timerRepairing = 0f;
+                RepairHealth(1);
+            }
+
+            repairBar.value = timerRepairing / timeNeeededToRepair;
+        }
+
+
     }
 
     public void Initialize()
     {
         UpdateHealthDisplay();
+        RepairEnds();
     }
 
     public void Brake()
@@ -154,6 +172,20 @@ public class Train : MonoBehaviour
     void UpdateHealthDisplay()
     {
         healthDebugText.text = "Santé : " + currentHealth + " / " + maxHealth;
+    }
+
+    public void RepairBegins()
+    {
+
+        isReparing = true;
+        repairBar.gameObject.SetActive(true);
+    }
+
+    public void RepairEnds()
+    {
+        isReparing = false;
+        repairBar.gameObject.SetActive(false);
+        timerRepairing = 0f;
     }
 
     public void LaunchTchouTchou()
