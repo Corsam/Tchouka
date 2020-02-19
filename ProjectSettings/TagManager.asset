@@ -5,8 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Obstacle
-  - Front
-  - Back
+  - Tremplin
   layers:
   - Default
   - TransparentFX
