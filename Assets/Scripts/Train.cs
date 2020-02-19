@@ -14,6 +14,7 @@ public class Train : MonoBehaviour
     public Text healthDebugText;
 
     public GameObject tchouCollider;
+    Animator anim;
 
     public float currentSpeed;
     public float speedLeverValue = 5;
@@ -44,6 +45,7 @@ public class Train : MonoBehaviour
     bool collided = false;
     bool isBraking = false;
     bool isReparing = false;
+    bool isJumping = false;
 
     float timerCollision = 0f;
     public float collisionBrakeTime = 1f;
@@ -102,6 +104,18 @@ public class Train : MonoBehaviour
     {
         UpdateHealthDisplay();
         RepairEnds();
+        anim = GetComponent<Animator>();
+    }
+
+    public void Jump()
+    {
+        isJumping = true;
+        anim.SetTrigger("Jump");
+    }
+
+    public void EndJump()
+    {
+        isJumping = false;
     }
 
     public void Collision()
@@ -200,7 +214,6 @@ public class Train : MonoBehaviour
 
     public void RepairBegins()
     {
-
         isReparing = true;
         repairBar.gameObject.SetActive(true);
     }
@@ -214,6 +227,10 @@ public class Train : MonoBehaviour
 
     public void LaunchTchouTchou()
     {
+        if (isJumping)
+        {
+            Debug.Log("ça tourne mdr");
+        }
         StartCoroutine(TchouTchou());
     }
 
