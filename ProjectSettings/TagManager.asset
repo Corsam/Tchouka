@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Obstacle
   - Tremplin
+  - Gare
+  - Collectible
   layers:
   - Default
   - TransparentFX

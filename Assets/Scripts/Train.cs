@@ -12,9 +12,13 @@ public class Train : MonoBehaviour
     public Text speedDebugText;
     public GameObject tchouTchouDebug;
     public Text healthDebugText;
+    public Text passagersDebugText;
+    public Text coinsDebugText;
 
     public GameObject tchouCollider;
     Animator anim;
+
+    int passagersCount = 0;
 
     public float currentSpeed;
     public float speedLeverValue = 5;
@@ -24,12 +28,18 @@ public class Train : MonoBehaviour
     public float coalConso = 5;
     float currentCoalLevel = 95;
 
+    public int coinsCollected = 0;
+
     public int maxHealth = 5;
     int currentHealth = 5;
     public float healthMult_0 = 0.75f;
     public int threshold_health = 2;
     public float healthMult_1 = 1f;
     float currentHealthMult = 1f;
+
+    public float boostValue = 1.5f;
+    public float boostTime = 1f;
+
 
     public float speedMult_0 = 0.5f;
     public Color barColor_0 = new Color(100, 0, 0);
@@ -46,6 +56,10 @@ public class Train : MonoBehaviour
     bool isBraking = false;
     bool isReparing = false;
     bool isJumping = false;
+    bool hasSpinned = false;
+    bool isBoosting = false;
+
+    public Gare nearestGare = null;
 
     float timerCollision = 0f;
     public float collisionBrakeTime = 1f;
@@ -62,8 +76,12 @@ public class Train : MonoBehaviour
         UpdateSpeedMult();
 
         //Vérifie si le frein est appuyé ou pas
-        
-        if (collided)
+
+        if (isBoosting)
+        {
+            currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult * boostValue, collisionBrakeForce);
+        }
+        else if (collided)
         {
             currentSpeed = Mathf.Lerp(currentSpeed, 0, collisionBrakeForce);
             timerCollision += Time.deltaTime;
@@ -76,6 +94,7 @@ public class Train : MonoBehaviour
         {
             currentSpeed = Mathf.Lerp(currentSpeed, 0, brakeForce);
         }
+        else
         {
             currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult, speedChangeForce);
         }
@@ -107,6 +126,11 @@ public class Train : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
+    public void SetNearestGare (Gare gare)
+    {
+        nearestGare = gare;
+    }
+
     public void Jump()
     {
         isJumping = true;
@@ -116,6 +140,12 @@ public class Train : MonoBehaviour
     public void EndJump()
     {
         isJumping = false;
+        if (hasSpinned)
+        {
+            //Debug.Log("à fond les ballons !");
+            StartCoroutine(Boost());
+        }
+        hasSpinned = false;
     }
 
     public void Collision()
@@ -212,6 +242,22 @@ public class Train : MonoBehaviour
         healthDebugText.text = "Santé : " + currentHealth + " / " + maxHealth;
     }
 
+    void UpdatePassagersDisplay()
+    {
+        passagersDebugText.text = "Passagers : " + passagersCount;
+    }
+
+    void UpdateCoinsDisplay()
+    {
+        coinsDebugText.text = "Pièces : " + coinsCollected;
+    }
+
+    public void TakeCoins(int coins)
+    {
+        coinsCollected += coins;
+        UpdateCoinsDisplay();
+    }
+
     public void RepairBegins()
     {
         isReparing = true;
@@ -225,11 +271,37 @@ public class Train : MonoBehaviour
         timerRepairing = 0f;
     }
 
+    void TakePassagers(int passagers)
+    {
+        passagersCount += passagers;
+        UpdatePassagersDisplay();
+    }
+
+    public void LosePassagers(int passagers)
+    {
+        if (passagersCount - passagers <= 0)
+        {
+            passagersCount = 0;
+        }
+        else
+        {
+            passagersCount -= passagers;
+        }
+        UpdatePassagersDisplay();
+    }
+
     public void LaunchTchouTchou()
     {
-        if (isJumping)
+        if (isJumping && !hasSpinned)
         {
-            Debug.Log("ça tourne mdr");
+            //Debug.Log("ça tourne mdr");
+            anim.SetTrigger("Spin");
+            hasSpinned = true;
+        }
+        else if (nearestGare != null)
+        {
+            TakePassagers(nearestGare.passagersToTake);
+            nearestGare = null;
         }
         StartCoroutine(TchouTchou());
     }
@@ -243,5 +315,14 @@ public class Train : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         tchouCollider.SetActive(false);
+    }
+
+    IEnumerator Boost()
+    {
+        isBoosting = true;
+
+        yield return new WaitForSeconds(boostTime);
+
+        isBoosting = false;
     }
 }

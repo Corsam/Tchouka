@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     private Train train;
     private GameState state = GameState.Ingame;
 
+    public int coins = 0;
+
     int currentRail = 0;
 
     public float speed0 = 0;
@@ -152,5 +154,10 @@ public class GameManager : MonoBehaviour
             currentRail = newRail;
             canChangeTrack = false;
         }
+    }
+
+    public void AddCoins(int coinsToAdd)
+    {
+        coins += coinsToAdd;
     }
 }
