@@ -15,7 +15,7 @@ namespace PathCreation.Examples
         public PathCreator pathCreator;
         public EndOfPathInstruction endOfPathInstruction;
         public float speed = 5;
-        float distanceTravelled;
+        float distanceTravelled = 0;
 
         void Start() {
             if (pathCreator != null)

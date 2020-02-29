@@ -13,6 +13,16 @@ public class MinionManager : MonoBehaviour
         leader = minions[0];
     }
 
+    public GameObject GetMinion(int minion)
+    {
+        if (minion >= 0 && minion < minions.Length)
+        {
+            return minions[minion].gameObject;
+        }
+
+        return null;
+    }
+
     public void ChangeLeader (int newLeader)
     {
         if (newLeader >= 0 && newLeader < minions.Length)

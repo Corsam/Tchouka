@@ -8,6 +8,7 @@ TagManager:
   - Tremplin
   - Gare
   - Collectible
+  - Stop Zone
   layers:
   - Default
   - TransparentFX
