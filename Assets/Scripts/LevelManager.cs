@@ -5,8 +5,10 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     public GameManager gm;
-    public Starting starting;
     public Train train;
+    public bool[] checklist;
+    public StopWall finalWall;
+    public float distance;
     int passengersFinal;
     float timeFinal;
     int score;
@@ -15,9 +17,18 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         gm = FindObjectOfType<GameManager>();
-        starting = GetComponent<Starting>();
-        starting.enabled = true;
+        //GetEndInfo();
+        Starting();
         train.enabled = false;
+    }
+
+    void GetEndInfo()
+    {
+        foreach (var minion in gm.mm.minions)
+        {
+            distance += minion.pathCreator.path.GetClosestDistanceAlongPath(finalWall.transform.position);
+        }
+        distance = distance / (float)gm.mm.minions.Length;
     }
 
     public void GetTrainInfo(int _passengers, float _time, int _coins)
@@ -34,9 +45,29 @@ public class LevelManager : MonoBehaviour
 
     public void LaunchGame()
     {
+        foreach (bool req in checklist)
+        {
+            if (!req)
+            {
+                return;
+            }
+        }
         Debug.Log("C'est parti mon kiki !");
         train.Initialize();
         train.enabled = true;
         gm.SetGameState(GameManager.GameState.Ingame);
+    }
+
+    private void Starting()
+    {
+        //lm = GetComponent<LevelManager>();
+        train.Initialize();
+        Debug.Log("Normalement c'est bon");
+    }
+
+    public void Tchoutchou()
+    {
+        checklist[0] = true;
+        LaunchGame();
     }
 }

@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetButtonDown("Tchoutchou"))
             {
-                lm.starting.Tchoutchou();
+                lm.Tchoutchou();
             }
         }
     }

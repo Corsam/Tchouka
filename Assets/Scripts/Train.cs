@@ -7,7 +7,7 @@ public class Train : MonoBehaviour
     public MinionManager mm;
     public LevelManager lm;
 
-    public Slider coalBar;
+    public Slider progressionSlider;
     public Slider repairBar;
     public Image barFill;
     public Text speedDebugText;
@@ -16,6 +16,10 @@ public class Train : MonoBehaviour
     public Text passagersDebugText;
     public Text coinsDebugText;
     public Text timeDebugText;
+
+    public Text StateDebugText;
+
+    public Image coalBarImage;
 
     public GameObject tchouCollider;
     Animator anim;
@@ -48,6 +52,7 @@ public class Train : MonoBehaviour
     int currentRail = 0;
     int goalRail = -1;
     bool isChangingTrack = false;
+    float timeTrackChangeBegining = 0;
 
 
     public float speed0 = 0;
@@ -103,6 +108,8 @@ public class Train : MonoBehaviour
 
         UpdatePosition();
 
+        UpdateProgressionDisplay();
+
         //Gestion du cooldown du changement de rail
         if (!canChangeTrack)
         {
@@ -115,7 +122,7 @@ public class Train : MonoBehaviour
         }
 
         currentCoalLevel = Mathf.Clamp(currentCoalLevel - coalConso * Time.deltaTime, 0, 100);
-        coalBar.value = currentCoalLevel / 100f;
+        UpdateCoalDisplay();
 
         UpdateSpeedMult();
 
@@ -185,8 +192,13 @@ public class Train : MonoBehaviour
     {
         SetSpeed(0);
         mm.leader.speed = 0;
-        transform.position = mm.leader.transform.position;
-        transform.rotation = mm.leader.transform.rotation;
+        timeSpent = 0;
+        UpdateTimeDisplay();
+        passagersCount = 0;
+        UpdatePassagersDisplay();
+        coinsCollected = 0;
+        UpdateCoinsDisplay();  
+        UpdatePosition();
         UpdateHealthDisplay();
         RepairEnds();
         anim = GetComponent<Animator>();
@@ -194,8 +206,19 @@ public class Train : MonoBehaviour
 
     void UpdatePosition()
     {
-        transform.position = mm.leader.transform.position;
-        transform.rotation = mm.leader.transform.rotation;
+        //StateDebugText = anim.GetCurrentAnimatorStateInfo(0).
+        if (isChangingTrack /*&& false*/)
+        {
+            float lambda = Mathf.Clamp01((timeSpent - timeTrackChangeBegining) / anim.GetCurrentAnimatorStateInfo(0).length);
+
+            transform.position = Vector3.Lerp(mm.GetMinion(currentRail).transform.position, mm.GetMinion(goalRail).transform.position, lambda);           
+            transform.rotation = Quaternion.Lerp(mm.GetMinion(currentRail).transform.rotation, mm.GetMinion(goalRail).transform.rotation, lambda);           
+        }
+        else
+        {
+            transform.position = mm.leader.transform.position;
+            transform.rotation = mm.leader.transform.rotation;
+        }
     }
 
     void Stoped ()
@@ -312,12 +335,15 @@ public class Train : MonoBehaviour
 
     public void ChangeRail(int railShift)
     {
-        anim.SetTrigger("ChangeTrack");
         int newRail = currentRail + railShift;
         if (canChangeTrack && newRail >= 0 && newRail < mm.minions.Length)
         {
-            mm.ChangeLeader(newRail);
-            currentRail = newRail;
+            timeTrackChangeBegining = timeSpent;
+            goalRail = newRail;
+            anim.SetTrigger("ChangeTrack");
+            isChangingTrack = true;
+            //mm.ChangeLeader(newRail);
+            //currentRail = newRail;
             canChangeTrack = false;
         }
     }
@@ -325,6 +351,7 @@ public class Train : MonoBehaviour
     public void TrackChanged()
     {
         isChangingTrack = false;
+        timeTrackChangeBegining = 0;
         mm.ChangeLeader(goalRail);
         currentRail = goalRail;
         goalRail = -1;
@@ -335,17 +362,17 @@ public class Train : MonoBehaviour
         if (currentCoalLevel < threshold_1)
         {
             currentSpeedMult = speedMult_0;
-            barFill.color = barColor_0;
+            //barFill.color = barColor_0;
         }
         else if (currentCoalLevel < threshold_2)
         {
             currentSpeedMult = speedMult_1;
-            barFill.color = barColor_1;
+            //barFill.color = barColor_1;
         }
         else
         {
             currentSpeedMult = speedMult_2;
-            barFill.color = barColor_2;
+            //barFill.color = barColor_2;
         }
     }
 
@@ -384,6 +411,12 @@ public class Train : MonoBehaviour
         Debug.Log("J'SUIS DEAD SA CHAKAL !");
     }
 
+    void UpdateCoalDisplay()
+    {
+        coalBarImage.fillAmount = currentCoalLevel * 0.66f / 100f + 0.3f;
+        //coalBar.value = currentCoalLevel / 100f;
+    }
+
     void UpdateHealthDisplay()
     {
         healthDebugText.text = "Santé : " + currentHealth + " / " + maxHealth;
@@ -391,12 +424,12 @@ public class Train : MonoBehaviour
 
     void UpdatePassagersDisplay()
     {
-        passagersDebugText.text = "Passagers : " + passagersCount;
+        passagersDebugText.text = passagersCount.ToString();
     }
 
     void UpdateCoinsDisplay()
     {
-        coinsDebugText.text = "Pièces : " + coinsCollected;
+        coinsDebugText.text = coinsCollected.ToString();
     }
     
     void UpdateTimeDisplay()
@@ -405,7 +438,21 @@ public class Train : MonoBehaviour
         int sec = (int)(timeSpent - min*60);
         int cent = (int)((timeSpent - min*60 - sec)*100);
 
-        timeDebugText.text = min + ":" + sec + "." +cent;
+        string secText = "";
+
+        if (sec < 10)
+        {
+            secText += "0";
+        }
+
+        secText += sec.ToString();
+
+        timeDebugText.text = min + ":" + secText /*+ "." +cent*/;
+    }
+
+    void UpdateProgressionDisplay()
+    {
+        progressionSlider.value = mm.leader.distanceTravelled / mm.leader.pathCreator.path.length;
     }
 
     public void TakeCoins(int coins)
