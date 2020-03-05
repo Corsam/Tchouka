@@ -6,6 +6,7 @@ namespace PathCreation.Examples
     // Depending on the end of path instruction, will either loop, reverse, or stop at the end of the path.
     public class PathFollower : MonoBehaviour
     {
+        public bool isMinionVisible;
         public bool isLeader;
         public GameObject leader;
 
@@ -25,6 +26,7 @@ namespace PathCreation.Examples
                 // Subscribed to the pathUpdated event so that we're notified if the path changes during the game
                 pathCreator.pathUpdated += OnPathChanged;
             }
+            GetComponent<MeshRenderer>().enabled = isMinionVisible;
         }
 
         void Update()
