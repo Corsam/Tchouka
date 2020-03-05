@@ -6,6 +6,7 @@ namespace PathCreation.Examples
     // Depending on the end of path instruction, will either loop, reverse, or stop at the end of the path.
     public class PathFollower : MonoBehaviour
     {
+        public bool isMinionVisible;
         public bool isLeader;
         public GameObject leader;
 
@@ -15,14 +16,17 @@ namespace PathCreation.Examples
         public PathCreator pathCreator;
         public EndOfPathInstruction endOfPathInstruction;
         public float speed = 5;
-        float distanceTravelled;
+        public float distanceTravelled = 0;
 
         void Start() {
+            distanceTravelled = 0;
+            SetTransform();
             if (pathCreator != null)
             {
                 // Subscribed to the pathUpdated event so that we're notified if the path changes during the game
                 pathCreator.pathUpdated += OnPathChanged;
             }
+            GetComponent<MeshRenderer>().enabled = isMinionVisible;
         }
 
         void Update()
@@ -37,10 +41,16 @@ namespace PathCreation.Examples
                 {
                     distanceTravelled = pathCreator.path.GetClosestDistanceAlongPath(leader.transform.position);
                 }
-                transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
-                transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
+                SetTransform();
             }
         }
+
+        public void SetTransform()
+        {
+            transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
+            transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
+        }
+
 
         // If the path changes during the game, update the distance travelled so that the follower's position on the new path
         // is as close as possible to its position on the old path

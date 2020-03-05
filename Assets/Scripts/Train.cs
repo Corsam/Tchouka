@@ -5,15 +5,28 @@ using UnityEngine.UI;
 public class Train : MonoBehaviour
 {
     public MinionManager mm;
+    public LevelManager lm;
 
-    public Slider coalBar;
+    public Slider progressionSlider;
     public Slider repairBar;
     public Image barFill;
     public Text speedDebugText;
     public GameObject tchouTchouDebug;
     public Text healthDebugText;
+    public Text passagersDebugText;
+    public Text coinsDebugText;
+    public Text timeDebugText;
+
+    public Text StateDebugText;
+
+    public Image coalBarImage;
 
     public GameObject tchouCollider;
+    Animator anim;
+
+    int passagersCount = 0;
+
+    float timeSpent = 0;
 
     public float currentSpeed;
     public float speedLeverValue = 5;
@@ -23,12 +36,38 @@ public class Train : MonoBehaviour
     public float coalConso = 5;
     float currentCoalLevel = 95;
 
+    public int coinsCollected = 0;
+
     public int maxHealth = 5;
     int currentHealth = 5;
     public float healthMult_0 = 0.75f;
     public int threshold_health = 2;
     public float healthMult_1 = 1f;
     float currentHealthMult = 1f;
+
+    public float boostValue = 1.5f;
+    public float boostTime = 1f;
+
+
+    int currentRail = 0;
+    int goalRail = -1;
+    bool isChangingTrack = false;
+    float timeTrackChangeBegining = 0;
+
+
+    public float speed0 = 0;
+    public float speed0_CoalConso = 1;
+    public float speed1 = 5;
+    public float speed1_CoalConso = 5;
+    public float speed2 = 10;
+    public float speed2_CoalConso = 10;
+
+    public float coalReload = 20;
+
+    bool canChangeTrack = true;
+    float timerTrackChange = 0;
+    public float cooldownTrackChange = 3;
+
 
     public float speedMult_0 = 0.5f;
     public Color barColor_0 = new Color(100, 0, 0);
@@ -41,42 +80,87 @@ public class Train : MonoBehaviour
 
     float currentSpeedMult = 1f;
 
+    public bool speedIs0 = false;
     bool collided = false;
     bool isBraking = false;
+    bool isAnimalBraking = false;
     bool isReparing = false;
+    bool isJumping = false;
+    bool hasSpinned = false;
+    bool isBoosting = false;
+    bool isInStopZone = false;
+
+    public Animal nearestHerd = null;
+    public Gare nearestGare = null;
 
     float timerCollision = 0f;
     public float collisionBrakeTime = 1f;
     public float collisionBrakeForce = 0.1f;
+    public float animalBrakeForce = 0.2f;
 
     public float timeNeeededToRepair = 3f;
     float timerRepairing = 0f;
 
     void Update()
     {
+        timeSpent += Time.deltaTime;
+        UpdateTimeDisplay();
+
+        UpdatePosition();
+
+        UpdateProgressionDisplay();
+
+        //Gestion du cooldown du changement de rail
+        if (!canChangeTrack)
+        {
+            timerTrackChange += Time.deltaTime;
+            if (timerTrackChange > cooldownTrackChange)
+            {
+                canChangeTrack = true;
+                timerTrackChange = 0;
+            }
+        }
+
         currentCoalLevel = Mathf.Clamp(currentCoalLevel - coalConso * Time.deltaTime, 0, 100);
-        coalBar.value = currentCoalLevel / 100f;
+        UpdateCoalDisplay();
 
         UpdateSpeedMult();
 
-        //Vérifie si le frein est appuyé ou pas
-        
-        if (collided)
+
+        if ((speedIs0 || isAnimalBraking || isBraking) && currentSpeed < 0.15f)
         {
-            currentSpeed = Mathf.Lerp(currentSpeed, 0, collisionBrakeForce);
-            timerCollision += Time.deltaTime;
-            if (timerCollision >= collisionBrakeTime)
+            currentSpeed = 0;
+            Stoped();
+        }
+        else
+        {
+            if (isAnimalBraking)
             {
-                CollisionEnds();
+                currentSpeed = Mathf.Lerp(currentSpeed, 0, animalBrakeForce);
+            }
+            else if (isBoosting)
+            {
+                currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult * boostValue, collisionBrakeForce);
+            }
+            else if (collided)
+            {
+                currentSpeed = Mathf.Lerp(currentSpeed, 0, collisionBrakeForce);
+                timerCollision += Time.deltaTime;
+                if (timerCollision >= collisionBrakeTime)
+                {
+                    CollisionEnds();
+                }
+            }
+            else if (isBraking)
+            {
+                currentSpeed = Mathf.Lerp(currentSpeed, 0, brakeForce);
+            }
+            else
+            {
+                currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult, speedChangeForce);
             }
         }
-        else if (isBraking)
-        {
-            currentSpeed = Mathf.Lerp(currentSpeed, 0, brakeForce);
-        }
-        {
-            currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult, speedChangeForce);
-        }
+
 
         mm.leader.speed = currentSpeed;
 
@@ -95,13 +179,101 @@ public class Train : MonoBehaviour
             repairBar.value = timerRepairing / timeNeeededToRepair;
         }
 
-
     }
+
+    /*public void Setup()
+    {
+        SetSpeedLeverValue(0);
+        transform.position = mm.leader.transform.position;
+        transform.rotation = mm.leader.transform.rotation;
+    }*/
 
     public void Initialize()
     {
+        SetSpeed(0);
+        mm.leader.speed = 0;
+        timeSpent = 0;
+        UpdateTimeDisplay();
+        passagersCount = 0;
+        UpdatePassagersDisplay();
+        coinsCollected = 0;
+        UpdateCoinsDisplay();  
+        UpdatePosition();
         UpdateHealthDisplay();
         RepairEnds();
+        anim = GetComponent<Animator>();
+    }
+
+    void UpdatePosition()
+    {
+        //StateDebugText = anim.GetCurrentAnimatorStateInfo(0).
+        if (isChangingTrack /*&& false*/)
+        {
+            float lambda = Mathf.Clamp01((timeSpent - timeTrackChangeBegining) / anim.GetCurrentAnimatorStateInfo(0).length);
+
+            transform.position = Vector3.Lerp(mm.GetMinion(currentRail).transform.position, mm.GetMinion(goalRail).transform.position, lambda);           
+            transform.rotation = Quaternion.Lerp(mm.GetMinion(currentRail).transform.rotation, mm.GetMinion(goalRail).transform.rotation, lambda);           
+        }
+        else
+        {
+            transform.position = mm.leader.transform.position;
+            transform.rotation = mm.leader.transform.rotation;
+        }
+    }
+
+    void Stoped ()
+    {
+        HerdFlee(nearestHerd);
+        LaunchEnd();
+    }
+
+    public void HitStopWall()
+    {
+        SetSpeed(0);
+        currentSpeed = 0;
+        Debug.Log("Ici on enlève des passagers");
+    }
+
+    void LaunchEnd()
+    {
+        if (isInStopZone)
+        {
+            Debug.Log("Bah GG mon con");
+            lm.GetTrainInfo(passagersCount, timeSpent, coinsCollected);
+            this.enabled = false;
+        }
+    }
+
+    public void SetNearestGare (Gare gare)
+    {
+        nearestGare = gare;
+    }
+
+    public void SetNearestHerd(Animal herd)
+    {
+        nearestHerd = herd;
+    }
+
+    public void AnimalBrake()
+    {
+        isAnimalBraking = true;
+    }
+
+    public void Jump()
+    {
+        isJumping = true;
+        anim.SetTrigger("Jump");
+    }
+
+    public void EndJump()
+    {
+        isJumping = false;
+        if (hasSpinned)
+        {
+            //Debug.Log("à fond les ballons !");
+            StartCoroutine(Boost());
+        }
+        hasSpinned = false;
     }
 
     public void Collision()
@@ -124,6 +296,28 @@ public class Train : MonoBehaviour
         isBraking = false;
     }
 
+    public void SetSpeed(int speed)
+    {
+        speedIs0 = (speed == 0);
+        switch(speed)
+        {
+            case 0 :
+                SetSpeedLeverValue(speed0);
+                SetCoalConso(speed0_CoalConso);
+                break;
+            case 1:
+                SetSpeedLeverValue(speed1);
+                SetCoalConso(speed1_CoalConso);
+                break;
+            case 2:
+                SetSpeedLeverValue(speed2);
+                SetCoalConso(speed2_CoalConso);
+                break;
+            default:
+                break;
+        }
+    }
+
     public void SetSpeedLeverValue(float newSpeed)
     {
         speedLeverValue = newSpeed;
@@ -134,9 +328,33 @@ public class Train : MonoBehaviour
         coalConso = newCoalConso;
     }
 
-    public void RefillCoal(float coalAmmount)
+    public void RefillCoal()
     {
-        currentCoalLevel = Mathf.Clamp(currentCoalLevel + coalAmmount, 0, 100);
+        currentCoalLevel = Mathf.Clamp(currentCoalLevel + coalReload, 0, 100);
+    }
+
+    public void ChangeRail(int railShift)
+    {
+        int newRail = currentRail + railShift;
+        if (canChangeTrack && newRail >= 0 && newRail < mm.minions.Length)
+        {
+            timeTrackChangeBegining = timeSpent;
+            goalRail = newRail;
+            anim.SetTrigger("ChangeTrack");
+            isChangingTrack = true;
+            //mm.ChangeLeader(newRail);
+            //currentRail = newRail;
+            canChangeTrack = false;
+        }
+    }
+
+    public void TrackChanged()
+    {
+        isChangingTrack = false;
+        timeTrackChangeBegining = 0;
+        mm.ChangeLeader(goalRail);
+        currentRail = goalRail;
+        goalRail = -1;
     }
 
     void UpdateSpeedMult()
@@ -144,17 +362,17 @@ public class Train : MonoBehaviour
         if (currentCoalLevel < threshold_1)
         {
             currentSpeedMult = speedMult_0;
-            barFill.color = barColor_0;
+            //barFill.color = barColor_0;
         }
         else if (currentCoalLevel < threshold_2)
         {
             currentSpeedMult = speedMult_1;
-            barFill.color = barColor_1;
+            //barFill.color = barColor_1;
         }
         else
         {
             currentSpeedMult = speedMult_2;
-            barFill.color = barColor_2;
+            //barFill.color = barColor_2;
         }
     }
 
@@ -193,14 +411,58 @@ public class Train : MonoBehaviour
         Debug.Log("J'SUIS DEAD SA CHAKAL !");
     }
 
+    void UpdateCoalDisplay()
+    {
+        coalBarImage.fillAmount = currentCoalLevel * 0.66f / 100f + 0.3f;
+        //coalBar.value = currentCoalLevel / 100f;
+    }
+
     void UpdateHealthDisplay()
     {
         healthDebugText.text = "Santé : " + currentHealth + " / " + maxHealth;
     }
 
+    void UpdatePassagersDisplay()
+    {
+        passagersDebugText.text = passagersCount.ToString();
+    }
+
+    void UpdateCoinsDisplay()
+    {
+        coinsDebugText.text = coinsCollected.ToString();
+    }
+    
+    void UpdateTimeDisplay()
+    {
+        int min = (int)timeSpent / 60;
+        int sec = (int)(timeSpent - min*60);
+        int cent = (int)((timeSpent - min*60 - sec)*100);
+
+        string secText = "";
+
+        if (sec < 10)
+        {
+            secText += "0";
+        }
+
+        secText += sec.ToString();
+
+        timeDebugText.text = min + ":" + secText /*+ "." +cent*/;
+    }
+
+    void UpdateProgressionDisplay()
+    {
+        progressionSlider.value = mm.leader.distanceTravelled / mm.leader.pathCreator.path.length;
+    }
+
+    public void TakeCoins(int coins)
+    {
+        coinsCollected += coins;
+        UpdateCoinsDisplay();
+    }
+
     public void RepairBegins()
     {
-
         isReparing = true;
         repairBar.gameObject.SetActive(true);
     }
@@ -212,8 +474,60 @@ public class Train : MonoBehaviour
         timerRepairing = 0f;
     }
 
+    void TakePassagers(int passagers)
+    {
+        passagersCount += passagers;
+        UpdatePassagersDisplay();
+    }
+
+    public void LosePassagers(int passagers)
+    {
+        if (passagersCount - passagers <= 0)
+        {
+            passagersCount = 0;
+        }
+        else
+        {
+            passagersCount -= passagers;
+        }
+        UpdatePassagersDisplay();
+    }
+
+    void HerdFlee(Animal herd)
+    {
+        if (herd != null)
+        {
+            herd.brakeZone.gameObject.SetActive(false);
+            isAnimalBraking = false;
+            herd.forceFields.SetActive(true);
+            herd.herdParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+    }
+
+    public void EnterStopZone()
+    {
+        isInStopZone = true;
+    }
+
     public void LaunchTchouTchou()
     {
+        if (isJumping && !hasSpinned)
+        {
+            //Debug.Log("ça tourne mdr");
+            anim.SetTrigger("Spin");
+            hasSpinned = true;
+        }
+        else if (nearestGare != null)
+        {
+            TakePassagers(nearestGare.passagersToTake);
+            nearestGare = null;
+        }
+        else if (nearestHerd != null)
+        {
+            Debug.Log("Du balais !");
+            HerdFlee(nearestHerd);
+            nearestHerd = null;
+        }
         StartCoroutine(TchouTchou());
     }
 
@@ -226,5 +540,14 @@ public class Train : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         tchouCollider.SetActive(false);
+    }
+
+    IEnumerator Boost()
+    {
+        isBoosting = true;
+
+        yield return new WaitForSeconds(boostTime);
+
+        isBoosting = false;
     }
 }
