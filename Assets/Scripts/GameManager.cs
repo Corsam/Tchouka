@@ -1,25 +1,44 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public MinionManager mm;
-    public GameObject trainGO;
+    //public GameObject trainGO;
     public LevelManager lm;
 
+    private bool firstLoad = true;
     private Train train;
-    private GameState state = GameState.Ingame;
+    public GameState state = GameState.Ingame;
 
     public int coins = 0;
 
     public enum GameState { Menu, Ingame, Starting};
 
+
+    void Awake()
+    {
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("GameManager");
+
+        if (objs.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     private void Start()
     {
-        state = GameState.Starting;
-        train = trainGO.GetComponent<Train>();
-        lm.enabled = true;
+        state = GameState.Menu;
+        if (firstLoad)
+        {
+            GetLevelInfo();
+        }
+        //train = trainGO.GetComponent<Train>();
+        //lm.enabled = true;
     }
 
     void Update()
@@ -35,6 +54,7 @@ public class GameManager : MonoBehaviour
 
             if (Input.GetButtonDown("Slowmo"))
             {
+                train.LaunchPause();
                 Debug.Log("C'EST LA PAUSE !");
             }
 
@@ -118,6 +138,43 @@ public class GameManager : MonoBehaviour
                 lm.Tchoutchou();
             }
         }
+    }
+
+    public void GetLevelInfo()
+    {
+        mm = FindObjectOfType<MinionManager>();
+        train = FindObjectOfType<Train>();
+        lm = FindObjectOfType<LevelManager>();
+        if (lm != null)
+        {
+            lm.enabled = true;
+        }
+    }
+
+    public void LoadLevel(string levelName)
+    {
+        //DontDestroyOnLoad(this.gameObject);
+        firstLoad = false;
+        StartCoroutine(LoadYourAsyncScene(levelName));
+        GetLevelInfo();
+    }
+
+    public void TestBouton()
+    {
+        Debug.Log("BUJURE");
+    }
+
+    IEnumerator LoadYourAsyncScene(string levelName)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(levelName);
+
+        // Wait until the asynchronous scene fully loads
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        GetLevelInfo();
     }
 
     public void SetGameState(GameState newState)

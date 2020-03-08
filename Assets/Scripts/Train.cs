@@ -11,17 +11,19 @@ public class Train : MonoBehaviour
     public Slider repairBar;
     public Image barFill;
     public Text speedDebugText;
-    public GameObject tchouTchouDebug;
+    //public GameObject tchouTchouDebug;
     public Text healthDebugText;
     public Text passagersDebugText;
     public Text coinsDebugText;
     public Text timeDebugText;
 
+    public GameObject pauseMenu;
+
     public Text StateDebugText;
 
     public Image coalBarImage;
 
-    public GameObject tchouCollider;
+    //public GameObject tchouCollider;
     Animator anim;
 
     int passagersCount = 0;
@@ -136,7 +138,7 @@ public class Train : MonoBehaviour
         {
             if (isAnimalBraking)
             {
-                currentSpeed = Mathf.Lerp(currentSpeed, 0, animalBrakeForce);
+                currentSpeed = Mathf.Lerp(currentSpeed * Time.deltaTime, 0, animalBrakeForce);
             }
             else if (isBoosting)
             {
@@ -201,6 +203,7 @@ public class Train : MonoBehaviour
         UpdatePosition();
         UpdateHealthDisplay();
         RepairEnds();
+        UpdatePosition();
         anim = GetComponent<Animator>();
     }
 
@@ -232,6 +235,18 @@ public class Train : MonoBehaviour
         SetSpeed(0);
         currentSpeed = 0;
         Debug.Log("Ici on enlève des passagers");
+    }
+
+    public void LaunchPause()
+    {
+        pauseMenu.SetActive(true);
+        Time.timeScale = 0;
+    }
+
+    public void EndPause()
+    {
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1;
     }
 
     void LaunchEnd()
@@ -535,11 +550,11 @@ public class Train : MonoBehaviour
     {
         //Debug.Log("POUET EN FAIT");
 
-        tchouCollider.SetActive(true);
+        //tchouCollider.SetActive(true);
 
         yield return new WaitForSeconds(2f);
 
-        tchouCollider.SetActive(false);
+        //tchouCollider.SetActive(false);
     }
 
     IEnumerator Boost()

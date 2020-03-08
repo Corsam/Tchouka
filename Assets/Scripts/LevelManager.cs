@@ -17,6 +17,8 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         gm = FindObjectOfType<GameManager>();
+        //gm.GetLevelInfo();
+        gm.SetGameState(GameManager.GameState.Starting);
         //GetEndInfo();
         Starting();
         train.enabled = false;
@@ -41,6 +43,17 @@ public class LevelManager : MonoBehaviour
     public void CalculateScore()
     {
         score = passengersFinal * 100 + (int)(18000 - timeFinal * 10);
+    }
+
+    public void ReturnToMenu()
+    {
+        gm.SetGameState(GameManager.GameState.Menu);
+        gm.LoadLevel("Test-MainMenu");
+    }
+
+    public void EndPause()
+    {
+        train.EndPause();
     }
 
     public void LaunchGame()

@@ -9,6 +9,7 @@ TagManager:
   - Gare
   - Collectible
   - Stop Zone
+  - GameManager
   layers:
   - Default
   - TransparentFX
