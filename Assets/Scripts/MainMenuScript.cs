@@ -11,15 +11,7 @@ public class MainMenuScript : MonoBehaviour
 
     public float effetBig;
 
-    public GameObject ImageLevel;
-    public GameObject ImageShop;
-    public GameObject ImageSettings;
-    public GameObject ImageQuit;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject[] images;
 
     // Update is called once per frame
     void Update()
@@ -39,7 +31,7 @@ public class MainMenuScript : MonoBehaviour
             checkMenu = checkMenu - 1;
         }
 
-        if (Input.GetButtonDown("Right") && checkMenu < 3)
+        if (Input.GetButtonDown("Right") && checkMenu < images.Length - 1)
         {
             checkMenu = checkMenu + 1;
         }
@@ -47,43 +39,10 @@ public class MainMenuScript : MonoBehaviour
 
     public void Bigger()
     {
-        if (checkMenu == 0)
-        {     
-            ImageLevel.SetActive(true);
-
-            ImageShop.SetActive(false);
-            ImageSettings.SetActive(false);
-            ImageQuit.SetActive(false);
-        }
-
-        else if (checkMenu == 1)
+        for (int i = 0; i < images.Length; i++)
         {
-            ImageShop.SetActive(true);
-
-            ImageLevel.SetActive(false);
-            ImageSettings.SetActive(false);
-            ImageQuit.SetActive(false);
+            images[i].SetActive(checkMenu == i);
         }
-
-        else if (checkMenu == 2)
-        {
-            ImageSettings.SetActive(true);
-
-            ImageLevel.SetActive(false);
-            ImageShop.SetActive(false);
-            ImageQuit.SetActive(false);
-        }
-
-        else if (checkMenu == 3)
-        {
-            ImageQuit.SetActive(true);
-
-            ImageLevel.SetActive(false);
-            ImageShop.SetActive(false);
-            ImageSettings.SetActive(false);
-        }
-
-        
     }
 
     public void level()

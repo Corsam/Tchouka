@@ -809,10 +809,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   checkMenu: 0
   effetBig: 0
-  ImageLevel: {fileID: 881371707}
-  ImageShop: {fileID: 1351788816}
-  ImageSettings: {fileID: 219325510}
-  ImageQuit: {fileID: 913683287}
+  images:
+  - {fileID: 881371707}
+  - {fileID: 1351788816}
+  - {fileID: 219325510}
+  - {fileID: 913683287}
 --- !u!4 &1233594834
 Transform:
   m_ObjectHideFlags: 0
