@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -9,10 +10,21 @@ public class LevelManager : MonoBehaviour
     public bool[] checklist;
     public StopWall finalWall;
     public float distance;
+
+    public GameObject endMenu;
+
+    public Text passagersText;
+    public Text piecesText;
+    public Text timeText;
+    public Text noteText;
+
     int passengersFinal;
     float timeFinal;
     int score;
     int coins;
+    string note;
+
+    public string[] notes;
 
     private void Start()
     {
@@ -24,6 +36,16 @@ public class LevelManager : MonoBehaviour
         train.enabled = false;
     }
 
+    public void EndGame(int _passengers, float _time, int _coins)
+    {
+        GetTrainInfo(_passengers, _time, _coins);
+        CalculateScore();
+        DefineNote();
+        DisplayEndInfo();
+        gm.AddCoins(coins);
+        endMenu.SetActive(true);
+    }
+
     void GetEndInfo()
     {
         foreach (var minion in gm.mm.minions)
@@ -31,6 +53,16 @@ public class LevelManager : MonoBehaviour
             distance += minion.pathCreator.path.GetClosestDistanceAlongPath(finalWall.transform.position);
         }
         distance = distance / (float)gm.mm.minions.Length;
+    }
+
+    public void LaunchEndMenu()
+    {
+        endMenu.SetActive(true);
+    }
+
+    void DefineNote()
+    {
+        note = notes[Random.Range(0, 5)];
     }
 
     public void GetTrainInfo(int _passengers, float _time, int _coins)
@@ -45,6 +77,14 @@ public class LevelManager : MonoBehaviour
         score = passengersFinal * 100 + (int)(18000 - timeFinal * 10);
     }
 
+    void DisplayEndInfo()
+    {
+        passagersText.text = "nb de passagers : " + passengersFinal;
+        piecesText.text = "nb de pieces : " + coins;
+        timeText.text = "temps écoulé : " + timeFinal;
+        noteText.text = "Note finale : " + note;
+    }
+
     public void ReturnToMenu()
     {
         gm.SetGameState(GameManager.GameState.Menu);
@@ -53,6 +93,7 @@ public class LevelManager : MonoBehaviour
 
     public void EndPause()
     {
+        train.enabled = true;
         train.EndPause();
     }
 

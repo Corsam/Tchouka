@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public MinionManager mm;
     //public GameObject trainGO;
     public LevelManager lm;
+    public MainMenuScriptCorsam mms;
 
     private bool firstLoad = true;
     private Train train;
@@ -149,6 +150,11 @@ public class GameManager : MonoBehaviour
         {
             lm.enabled = true;
         }
+        mms = FindObjectOfType<MainMenuScriptCorsam>();
+        if (mms != null)
+        {
+            mms.enabled = true;
+        }
     }
 
     public void LoadLevel(string levelName)
@@ -182,8 +188,18 @@ public class GameManager : MonoBehaviour
         state = newState;
     }
 
+    public int GetCoinsAmount()
+    {
+        return coins;
+    }
+
     public void AddCoins(int coinsToAdd)
     {
         coins += coinsToAdd;
+    }
+
+    public void RemoveCoins(int coinsToRemove)
+    {
+        coins -= coinsToRemove;
     }
 }

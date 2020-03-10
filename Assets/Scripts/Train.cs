@@ -128,7 +128,6 @@ public class Train : MonoBehaviour
 
         UpdateSpeedMult();
 
-
         if ((speedIs0 || isAnimalBraking || isBraking) && currentSpeed < 0.15f)
         {
             currentSpeed = 0;
@@ -138,7 +137,7 @@ public class Train : MonoBehaviour
         {
             if (isAnimalBraking)
             {
-                currentSpeed = Mathf.Lerp(currentSpeed * Time.deltaTime, 0, animalBrakeForce);
+                currentSpeed = Mathf.Lerp(currentSpeed, 0, animalBrakeForce);
             }
             else if (isBoosting)
             {
@@ -162,7 +161,6 @@ public class Train : MonoBehaviour
                 currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult, speedChangeForce);
             }
         }
-
 
         mm.leader.speed = currentSpeed;
 
@@ -240,12 +238,15 @@ public class Train : MonoBehaviour
     public void LaunchPause()
     {
         pauseMenu.SetActive(true);
+        lm.gm.SetGameState(GameManager.GameState.Menu);
         Time.timeScale = 0;
+        this.enabled = false;
     }
 
     public void EndPause()
     {
         pauseMenu.SetActive(false);
+        lm.gm.SetGameState(GameManager.GameState.Ingame);
         Time.timeScale = 1;
     }
 
@@ -254,7 +255,8 @@ public class Train : MonoBehaviour
         if (isInStopZone)
         {
             Debug.Log("Bah GG mon con");
-            lm.GetTrainInfo(passagersCount, timeSpent, coinsCollected);
+            //lm.GetTrainInfo(passagersCount, timeSpent, coinsCollected);
+            lm.EndGame(passagersCount, timeSpent, coinsCollected);
             this.enabled = false;
         }
     }
