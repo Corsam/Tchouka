@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     //public GameObject trainGO;
     public LevelManager lm;
     public MainMenuScriptCorsam mms;
+    public LevelSelectorManager lsm;
 
     private bool firstLoad = true;
     private Train train;
@@ -16,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     public int coins = 0;
 
-    public enum GameState { Menu, Ingame, Starting};
+    public enum GameState { Menu, Ingame, Starting, LevelSelection};
 
 
     void Awake()
@@ -111,7 +112,7 @@ public class GameManager : MonoBehaviour
                 train.SetSpeed(2);
             }
         }
-        else if (state == GameState.Menu)
+        else if (state == GameState.LevelSelection)
         {
             if (Input.GetButtonDown("Tchoutchou"))
             {

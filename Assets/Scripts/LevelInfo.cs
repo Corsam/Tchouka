@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class LevelInfo : MonoBehaviour
 {
-    public int numéro;
-    public string message;
+    public Sprite image;
     public float tempsRecord;
     public string noteRecord;
 }

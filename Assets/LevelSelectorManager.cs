@@ -8,6 +8,8 @@ public class LevelSelectorManager : MonoBehaviour
     GameObject[] levels;
     GameObject[] lines;
 
+    public Sprite[] notesSprites;
+
     public int levelTarget;
     public int levelCurrent;
 
@@ -15,15 +17,17 @@ public class LevelSelectorManager : MonoBehaviour
 
     public GameObject levelInfoUI;
 
-    public Text levelMessageText;
+    public Image levelImage;
     public Text levelTempsRecordText;
-    public Text levelNoteRecordText;
+    public Image levelNoteRecordImage;
 
     public GameObject linePrefab;
 
     private void Start()
     {
         levelInfoUI.SetActive(false);
+
+        levels = new GameObject[0];
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -45,6 +49,7 @@ public class LevelSelectorManager : MonoBehaviour
         {
             lines = new GameObject[levels.Length - 1];
         }
+
         for (int i = 0; i < levels.Length - 1; i++)
         {
             lines[i] = Instantiate(linePrefab);
@@ -71,9 +76,26 @@ public class LevelSelectorManager : MonoBehaviour
     {
         LevelInfo infos = levels[level].GetComponent<LevelInfo>();
 
-        levelMessageText.text = infos.message;
+        levelImage.sprite = infos.image;
         levelTempsRecordText.text = infos.tempsRecord.ToString();
-        levelNoteRecordText.text = infos.noteRecord;
+        levelNoteRecordImage.sprite = GetNoteImage(infos.noteRecord);
         //WIP
+    }
+
+    Sprite GetNoteImage(string note)
+    {
+        switch (note)
+        {
+            case "A":
+                return notesSprites[0];
+            case "B":
+                return notesSprites[1];
+            case "C":
+                return notesSprites[2];
+            case "D":
+                return notesSprites[3];
+            default:
+                return null;
+        }
     }
 }
