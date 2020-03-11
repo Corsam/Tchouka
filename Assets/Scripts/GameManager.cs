@@ -146,6 +146,7 @@ public class GameManager : MonoBehaviour
         mm = FindObjectOfType<MinionManager>();
         train = FindObjectOfType<Train>();
         lm = FindObjectOfType<LevelManager>();
+        MenuManager meMa = FindObjectOfType<MenuManager>();
         if (lm != null)
         {
             lm.enabled = true;
@@ -154,6 +155,10 @@ public class GameManager : MonoBehaviour
         if (mms != null)
         {
             mms.enabled = true;
+        }
+        if (meMa != null)
+        {
+            meMa.enabled = true;
         }
     }
 
