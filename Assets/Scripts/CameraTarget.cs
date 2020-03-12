@@ -8,7 +8,7 @@ public class CameraTarget : MonoBehaviour
 
     public void SetPosition(Vector3 position)
     {
-        Debug.Log("Je set comme jaja frère");
+        //Debug.Log("Je set comme jaja frère");
         transform.position = position + offset;
     }
 }

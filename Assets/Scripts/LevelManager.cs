@@ -58,6 +58,7 @@ public class LevelManager : MonoBehaviour
     public void LaunchEndMenu()
     {
         endMenu.SetActive(true);
+        gm.SetGameState(GameManager.GameState.Menu);
     }
 
     void DefineNote()
@@ -89,6 +90,11 @@ public class LevelManager : MonoBehaviour
     {
         gm.SetGameState(GameManager.GameState.Menu);
         gm.LoadLevel("Test-MainMenu");
+    }
+
+    public void Rejouer(string sceneName)
+    {
+        gm.LoadLevel(sceneName);
     }
 
     public void EndPause()

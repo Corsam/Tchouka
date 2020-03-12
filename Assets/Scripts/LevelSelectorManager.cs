@@ -34,6 +34,8 @@ public class LevelSelectorManager : MonoBehaviour
 
     public GameObject linePrefab;
 
+    bool initDone = false;
+
     private void Start()
     {
         gm = FindObjectOfType<GameManager>();
@@ -74,12 +76,16 @@ public class LevelSelectorManager : MonoBehaviour
             lr.enabled = true;
         }
 
-        UpdateLevelCurrent();
+        initDone = true;
     }
 
     private void Update()
     {
-        UpdateLevelCurrent();
+        if (initDone)
+        {
+            UpdateLevelCurrent();
+            UpdateFlèches();
+        }
     }
 
     void UpdateLevelCurrent()
@@ -92,15 +98,9 @@ public class LevelSelectorManager : MonoBehaviour
 
     void UpdateFlèches()
     {
-        if (currentSelected == levels[0] && flècheGauche.gameObject.activeSelf)
-        {
-            flècheGauche.gameObject.SetActive(false);
-        }
+        flècheGauche.gameObject.SetActive(currentSelected != levels[0]);
 
-        if (currentSelected == levels[levels.Length - 1] && flècheGauche.gameObject.activeSelf)
-        {
-            flècheDroite.gameObject.SetActive(false);
-        }
+        flècheDroite.gameObject.SetActive(currentSelected != levels[levels.Length - 1]);
     }
 
     void GetLevelInfo(GameObject level)
