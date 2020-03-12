@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CORENTIN ONLY WALLAH.unity
     guid: f39d1048726a4a945b80ff2b489f26e9
+  - enabled: 1
+    path: Assets/Scenes/Levels/Level 3.unity
+    guid: bc12cbb1638e208459f4a6513e76ce41
   m_configObjects: {}

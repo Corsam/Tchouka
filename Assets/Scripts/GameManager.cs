@@ -39,8 +39,6 @@ public class GameManager : MonoBehaviour
         {
             GetLevelInfo();
         }
-        //train = trainGO.GetComponent<Train>();
-        //lm.enabled = true;
     }
 
     void Update()
@@ -112,27 +110,6 @@ public class GameManager : MonoBehaviour
                 train.SetSpeed(2);
             }
         }
-        else if (state == GameState.LevelSelection)
-        {
-            if (Input.GetButtonDown("Tchoutchou"))
-            {
-                //sélectionner
-            }
-
-            if (Input.GetButtonDown("Brake"))
-            {
-                //retour
-            }
-
-            if (Input.GetButtonDown("Left"))
-            {
-                //bouger à gauche
-            }
-            if (Input.GetButtonDown("Right"))
-            {
-                //bouger à droite
-            }
-        }
         else if (state == GameState.Starting)
         {
             if (Input.GetButtonDown("Tchoutchou"))
@@ -160,6 +137,11 @@ public class GameManager : MonoBehaviour
         if (meMa != null)
         {
             meMa.enabled = true;
+        }
+        lsm = FindObjectOfType<LevelSelectorManager>();
+        if (lsm != null)
+        {
+            lsm.enabled = true;
         }
     }
 

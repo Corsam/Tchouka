@@ -16,6 +16,4 @@ public class MenuManager : MonoBehaviour
     {
         gm.LoadLevel(scene);
     }
-
-    
 }
