@@ -43,6 +43,7 @@ public class LevelManager : MonoBehaviour
         DefineNote();
         DisplayEndInfo();
         gm.AddCoins(coins);
+        gm.SetGameState(GameManager.GameState.Menu);
         endMenu.SetActive(true);
     }
 
@@ -89,7 +90,7 @@ public class LevelManager : MonoBehaviour
     public void ReturnToMenu()
     {
         gm.SetGameState(GameManager.GameState.Menu);
-        gm.LoadLevel("Test-MainMenu");
+        gm.LoadLevel("MainMenu-Tweaks");
     }
 
     public void Rejouer(string sceneName)
@@ -112,7 +113,7 @@ public class LevelManager : MonoBehaviour
                 return;
             }
         }
-        Debug.Log("C'est parti mon kiki !");
+        //Debug.Log("C'est parti mon kiki !");
         train.Initialize();
         train.enabled = true;
         gm.SetGameState(GameManager.GameState.Ingame);
@@ -122,7 +123,7 @@ public class LevelManager : MonoBehaviour
     {
         //lm = GetComponent<LevelManager>();
         train.Initialize();
-        Debug.Log("Normalement c'est bon");
+        //Debug.Log("Normalement c'est bon");
     }
 
     public void Tchoutchou()

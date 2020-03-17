@@ -10,7 +10,7 @@ public class AnimalBrakeZone : MonoBehaviour
         {
             Train train = other.GetComponent<Train>();
             train.AnimalBrake();
-            Debug.Log("LE FREIN !");
+            //Debug.Log("LE FREIN !");
         }
     }
 }

@@ -10,7 +10,7 @@ public class StopWall : MonoBehaviour
         {
             Train train = other.GetComponent<Train>();
             train.HitStopWall();
-            Debug.Log("ET BIM LE MUR MON POTE !");
+            //Debug.Log("ET BIM LE MUR MON POTE !");
         }
     }
 }

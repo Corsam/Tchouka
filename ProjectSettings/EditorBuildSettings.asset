@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test-MainMenu.unity
-    guid: eb9987d3a596a56418d60a2ff07bf667
+    path: Assets/Scenes/Menus/MainMenu-Tweaks.unity
+    guid: ca3ff9e209dc6cb46aa78cadf7ec8071
   - enabled: 1
-    path: Assets/Scenes/CORENTIN ONLY WALLAH.unity
-    guid: f39d1048726a4a945b80ff2b489f26e9
+    path: Assets/Scenes/Menus/LevelSelection-Test.unity
+    guid: f44e3df09c6996943a9d71aac0679639
   - enabled: 1
     path: Assets/Scenes/Levels/Level 3.unity
-    guid: bc12cbb1638e208459f4a6513e76ce41
+    guid: 2beb6426a8437524cb95cad4be22386d
   m_configObjects: {}

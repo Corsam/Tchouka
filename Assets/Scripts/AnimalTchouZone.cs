@@ -10,7 +10,7 @@ public class AnimalTchouZone : MonoBehaviour
         {
             Train train = other.GetComponent<Train>();
             train.SetNearestHerd(this.GetComponentInParent<Animal>());
-            Debug.Log("Attention le nanimal");
+            //Debug.Log("Attention le nanimal");
         }
     }
 }

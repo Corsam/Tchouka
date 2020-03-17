@@ -15,7 +15,7 @@ public class ObstacleScript : MonoBehaviour
             train.TakeDamage(damage);
             train.LosePassagers(passagersToLose);
             train.Collision();
-            Debug.Log("Santé - " + damage + ", passagers - " + passagersToLose);
+            //Debug.Log("Santé - " + damage + ", passagers - " + passagersToLose);
         }
     }
 }

@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
             if (Input.GetButtonDown("Slowmo"))
             {
                 train.LaunchPause();
-                Debug.Log("C'EST LA PAUSE !");
+                //Debug.Log("C'EST LA PAUSE !");
             }
 
             //Système de réparation
@@ -151,6 +151,11 @@ public class GameManager : MonoBehaviour
         firstLoad = false;
         StartCoroutine(LoadYourAsyncScene(levelName));
         GetLevelInfo();
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     public void TestBouton()
