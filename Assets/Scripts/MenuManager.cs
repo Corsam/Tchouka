@@ -16,4 +16,9 @@ public class MenuManager : MonoBehaviour
     {
         gm.LoadLevel(scene);
     }
+
+    public void QuitGame()
+    {
+        gm.QuitGame();
+    }
 }

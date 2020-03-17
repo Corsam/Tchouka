@@ -12,7 +12,7 @@ public class Starting : MonoBehaviour
     {
         lm = GetComponent<LevelManager>();
         lm.train.Initialize();
-        Debug.Log("Normalement c'est bon");
+        //Debug.Log("Normalement c'est bon");
     }
 
     public void Tchoutchou()

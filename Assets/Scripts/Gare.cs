@@ -12,7 +12,7 @@ public class Gare : MonoBehaviour
         {
             Train train = other.GetComponent<Train>();
             train.SetNearestGare(this);
-            Debug.Log("J'entre dans la gare");
+            //Debug.Log("J'entre dans la gare");
         }
     }
 
@@ -22,7 +22,7 @@ public class Gare : MonoBehaviour
         {
             Train train = other.GetComponent<Train>();
             train.SetNearestGare(null);
-            Debug.Log("Je pars de la gare");
+            //Debug.Log("Je pars de la gare");
         }
     }
 }

@@ -10,7 +10,7 @@ public class Tremplin : MonoBehaviour
         {
             Train train = other.GetComponent<Train>();
             train.Jump();
-            Debug.Log("débisou je manvole");
+            //Debug.Log("débisou je manvole");
         }
     }
 }

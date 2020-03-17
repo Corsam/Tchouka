@@ -137,15 +137,15 @@ public class Train : MonoBehaviour
         {
             if (isAnimalBraking)
             {
-                currentSpeed = Mathf.Lerp(currentSpeed, 0, animalBrakeForce);
+                currentSpeed = Mathf.Lerp(currentSpeed, 0, animalBrakeForce + (0.01f*Time.deltaTime));
             }
             else if (isBoosting)
             {
-                currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult * boostValue, collisionBrakeForce);
+                currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult * boostValue, collisionBrakeForce + (0.01f * Time.deltaTime));
             }
             else if (collided)
             {
-                currentSpeed = Mathf.Lerp(currentSpeed, 0, collisionBrakeForce);
+                currentSpeed = Mathf.Lerp(currentSpeed, 0, collisionBrakeForce + (0.01f * Time.deltaTime));
                 timerCollision += Time.deltaTime;
                 if (timerCollision >= collisionBrakeTime)
                 {
@@ -154,11 +154,11 @@ public class Train : MonoBehaviour
             }
             else if (isBraking)
             {
-                currentSpeed = Mathf.Lerp(currentSpeed, 0, brakeForce);
+                currentSpeed = Mathf.Lerp(currentSpeed, 0, brakeForce + (0.01f * Time.deltaTime));
             }
             else
             {
-                currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult, speedChangeForce);
+                currentSpeed = Mathf.Lerp(currentSpeed, speedLeverValue * currentSpeedMult * currentHealthMult, speedChangeForce + (0.01f * Time.deltaTime));
             }
         }
 
@@ -181,12 +181,6 @@ public class Train : MonoBehaviour
 
     }
 
-    /*public void Setup()
-    {
-        SetSpeedLeverValue(0);
-        transform.position = mm.leader.transform.position;
-        transform.rotation = mm.leader.transform.rotation;
-    }*/
 
     public void Initialize()
     {
@@ -207,7 +201,6 @@ public class Train : MonoBehaviour
 
     void UpdatePosition()
     {
-        //StateDebugText = anim.GetCurrentAnimatorStateInfo(0).
         if (isChangingTrack /*&& false*/)
         {
             float lambda = Mathf.Clamp01((timeSpent - timeTrackChangeBegining) / anim.GetCurrentAnimatorStateInfo(0).length);
@@ -254,14 +247,13 @@ public class Train : MonoBehaviour
     {
         if (isInStopZone)
         {
-            Debug.Log("Bah GG mon con");
-            //lm.GetTrainInfo(passagersCount, timeSpent, coinsCollected);
+            //Debug.Log("Bah GG mon con");
             lm.EndGame(passagersCount, timeSpent, coinsCollected);
             this.enabled = false;
         }
     }
 
-    public void SetNearestGare (Gare gare)
+    public void SetNearestGare(Gare gare)
     {
         nearestGare = gare;
     }
@@ -359,8 +351,6 @@ public class Train : MonoBehaviour
             goalRail = newRail;
             anim.SetTrigger("ChangeTrack");
             isChangingTrack = true;
-            //mm.ChangeLeader(newRail);
-            //currentRail = newRail;
             canChangeTrack = false;
         }
     }
@@ -379,17 +369,14 @@ public class Train : MonoBehaviour
         if (currentCoalLevel < threshold_1)
         {
             currentSpeedMult = speedMult_0;
-            //barFill.color = barColor_0;
         }
         else if (currentCoalLevel < threshold_2)
         {
             currentSpeedMult = speedMult_1;
-            //barFill.color = barColor_1;
         }
         else
         {
             currentSpeedMult = speedMult_2;
-            //barFill.color = barColor_2;
         }
     }
 
@@ -410,10 +397,6 @@ public class Train : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
         UpdateHealthMult();
         UpdateHealthDisplay();
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
     }
 
     void RepairHealth(int heal)
@@ -423,15 +406,9 @@ public class Train : MonoBehaviour
         UpdateHealthDisplay();
     }
 
-    void Die()
-    {
-        Debug.Log("J'SUIS DEAD SA CHAKAL !");
-    }
-
     void UpdateCoalDisplay()
     {
         coalBarImage.fillAmount = currentCoalLevel * 0.66f / 100f + 0.3f;
-        //coalBar.value = currentCoalLevel / 100f;
     }
 
     void UpdateHealthDisplay()
@@ -541,22 +518,11 @@ public class Train : MonoBehaviour
         }
         else if (nearestHerd != null)
         {
-            Debug.Log("Du balais !");
+            //Debug.Log("Du balais !");
             HerdFlee(nearestHerd);
             nearestHerd = null;
         }
-        StartCoroutine(TchouTchou());
-    }
 
-    IEnumerator TchouTchou()
-    {
-        //Debug.Log("POUET EN FAIT");
-
-        //tchouCollider.SetActive(true);
-
-        yield return new WaitForSeconds(2f);
-
-        //tchouCollider.SetActive(false);
     }
 
     IEnumerator Boost()

@@ -10,7 +10,7 @@ public class StopZone : MonoBehaviour
         {
             Train train = other.GetComponent<Train>();
             train.EnterStopZone();
-            Debug.Log("FREINE C'EST LA FIN !");
+            //Debug.Log("FREINE C'EST LA FIN !");
         }
     }
 }
