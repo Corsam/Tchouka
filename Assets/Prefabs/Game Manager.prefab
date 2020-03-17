@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8802694438320281584}
   - component: {fileID: 8802694438320281585}
+  - component: {fileID: 4784274005279979560}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: GameManager
@@ -44,5 +45,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mm: {fileID: 0}
+  nm: {fileID: 4784274005279979560}
   lm: {fileID: 0}
+  mms: {fileID: 0}
+  lsm: {fileID: 0}
+  state: 1
   coins: 0
+--- !u!114 &4784274005279979560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8802694438320281586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7245e3edd101b724fac570b2646c986f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notesSprites:
+  - {fileID: 21300000, guid: 190656da2f18f7e49812bf4b81a4a405, type: 3}
+  - {fileID: 21300000, guid: 41514f3e378a94b4d9962571a445f631, type: 3}
+  - {fileID: 21300000, guid: 49c98e5c754f2944b9c4ce2adfdc895f, type: 3}
+  - {fileID: 21300000, guid: 6b8a381bfbdaecd4d8659110556964e9, type: 3}
+  - {fileID: 21300000, guid: e9bf6191dbc3ee64faa337012c034862, type: 3}

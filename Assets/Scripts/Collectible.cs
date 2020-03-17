@@ -10,7 +10,7 @@ public class Collectible : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Train train = other.GetComponent<Train>();
+            Train train = FindObjectOfType<Train>();
             train.TakeCoins(coinsToGive);
             Destroy(this.gameObject);
             //Debug.Log("Par ici la monnaie");

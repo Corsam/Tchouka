@@ -8,7 +8,7 @@ public class StopZone : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Train train = other.GetComponent<Train>();
+            Train train = FindObjectOfType<Train>();
             train.EnterStopZone();
             //Debug.Log("FREINE C'EST LA FIN !");
         }

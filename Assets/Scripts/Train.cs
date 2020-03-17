@@ -287,11 +287,14 @@ public class Train : MonoBehaviour
 
     public void Collision()
     {
+        Debug.Log("On a tapé");
+        timerCollision = 0;
         collided = true;
     }
 
     void CollisionEnds()
     {
+        Debug.Log("ça va mieux");
         collided = false;
     }
 

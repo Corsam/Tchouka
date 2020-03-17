@@ -8,7 +8,7 @@ public class Tremplin : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Train train = other.GetComponent<Train>();
+            Train train = FindObjectOfType<Train>();
             train.Jump();
             //Debug.Log("débisou je manvole");
         }

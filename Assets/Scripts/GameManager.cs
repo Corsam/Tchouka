@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public MinionManager mm;
+    public NoteManager nm;
     //public GameObject trainGO;
     public LevelManager lm;
     public MainMenuScriptCorsam mms;

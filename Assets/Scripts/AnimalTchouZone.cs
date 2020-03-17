@@ -8,7 +8,7 @@ public class AnimalTchouZone : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Train train = other.GetComponent<Train>();
+            Train train = FindObjectOfType<Train>();
             train.SetNearestHerd(this.GetComponentInParent<Animal>());
             //Debug.Log("Attention le nanimal");
         }

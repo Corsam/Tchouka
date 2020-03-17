@@ -10,7 +10,7 @@ public class Gare : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Train train = other.GetComponent<Train>();
+            Train train = FindObjectOfType<Train>();
             train.SetNearestGare(this);
             //Debug.Log("J'entre dans la gare");
         }
@@ -20,7 +20,7 @@ public class Gare : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Train train = other.GetComponent<Train>();
+            Train train = FindObjectOfType<Train>();
             train.SetNearestGare(null);
             //Debug.Log("Je pars de la gare");
         }

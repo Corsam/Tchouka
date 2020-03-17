@@ -14,24 +14,26 @@ public class LevelManager : MonoBehaviour
     public GameObject endMenu;
 
     public Text passagersText;
-    public Text piecesText;
     public Text timeText;
-    public Text noteText;
+    public Image noteImage;
+    public Image commentPassagersImage;
+    public Image commentTimeImage;
 
     int passengersFinal;
     float timeFinal;
     int score;
     int coins;
-    string note;
+    Sprite note;
+    Sprite comment_passager;
+    Sprite comment_time;
 
-    public string[] notes;
+    public Sprite[] commentsPassagers;
+    public Sprite[] commentsTime;
 
     private void Start()
     {
         gm = FindObjectOfType<GameManager>();
-        //gm.GetLevelInfo();
         gm.SetGameState(GameManager.GameState.Starting);
-        //GetEndInfo();
         Starting();
         train.enabled = false;
     }
@@ -41,6 +43,7 @@ public class LevelManager : MonoBehaviour
         GetTrainInfo(_passengers, _time, _coins);
         CalculateScore();
         DefineNote();
+        DefineComments();
         DisplayEndInfo();
         gm.AddCoins(coins);
         gm.SetGameState(GameManager.GameState.Menu);
@@ -64,7 +67,14 @@ public class LevelManager : MonoBehaviour
 
     void DefineNote()
     {
-        note = notes[Random.Range(0, 5)];
+        note = gm.nm.CalculateNote(score);
+    }
+
+    //TO DEFINE
+    void DefineComments()
+    {
+        comment_passager = commentsPassagers[Random.Range(0, commentsPassagers.Length)];
+        comment_time = commentsTime[Random.Range(0, commentsTime.Length)];
     }
 
     public void GetTrainInfo(int _passengers, float _time, int _coins)
@@ -74,6 +84,7 @@ public class LevelManager : MonoBehaviour
         coins = _coins;
     }
 
+    //TO DEFINE
     public void CalculateScore()
     {
         score = passengersFinal * 100 + (int)(18000 - timeFinal * 10);
@@ -81,16 +92,17 @@ public class LevelManager : MonoBehaviour
 
     void DisplayEndInfo()
     {
-        passagersText.text = "nb de passagers : " + passengersFinal;
-        piecesText.text = "nb de pieces : " + coins;
-        timeText.text = "temps écoulé : " + timeFinal;
-        noteText.text = "Note finale : " + note;
+        passagersText.text = passengersFinal.ToString();        
+        timeText.text = timeFinal.ToString();
+        noteImage.sprite = note;
+        commentPassagersImage.sprite = comment_passager;
+        commentTimeImage.sprite = comment_time;
     }
 
     public void ReturnToMenu()
     {
         gm.SetGameState(GameManager.GameState.Menu);
-        gm.LoadLevel("MainMenu-Tweaks");
+        gm.LoadLevel("LevelSelection-Test");
     }
 
     public void Rejouer(string sceneName)
