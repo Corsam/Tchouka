@@ -9660,7 +9660,7 @@ MonoBehaviour:
   coalBarImage: {fileID: 3005631884987134431}
   currentSpeed: 0
   speedLeverValue: 5
-  brakeForce: 0.06
+  brakeForce: 0.09
   speedChangeForce: 0.02
   coalConso: 5
   coinsCollected: 0
@@ -9668,16 +9668,16 @@ MonoBehaviour:
   healthMult_0: 0.75
   threshold_health: 2
   healthMult_1: 1
-  boostValue: 1.5
-  boostTime: 0.7
+  boostValue: 2
+  boostTime: 0.4
   speed0: 0
-  speed0_CoalConso: 1
+  speed0_CoalConso: 0.5
   speed1: 5
-  speed1_CoalConso: 2
+  speed1_CoalConso: 1
   speed2: 10
-  speed2_CoalConso: 3
-  coalReload: 15
-  cooldownTrackChange: 1
+  speed2_CoalConso: 1.5
+  coalReload: 20
+  cooldownTrackChange: 0.65
   speedMult_0: 0.5
   barColor_0: {r: 0.4528302, g: 0, b: 0, a: 1}
   threshold_1: 20
@@ -9690,7 +9690,7 @@ MonoBehaviour:
   nearestHerd: {fileID: 0}
   nearestGare: {fileID: 0}
   collisionBrakeTime: 1.5
-  collisionBrakeForce: 0.11
+  collisionBrakeForce: 0.2
   animalBrakeForce: 0.15
   timeNeeededToRepair: 1
 --- !u!54 &3005631885186807852
