@@ -87,7 +87,7 @@ public class Train : MonoBehaviour
     bool isBraking = false;
     bool isAnimalBraking = false;
     bool isReparing = false;
-    bool isJumping = false;
+    public bool isJumping = false;
     bool hasSpinned = false;
     bool isBoosting = false;
     bool isInStopZone = false;
@@ -203,10 +203,15 @@ public class Train : MonoBehaviour
     {
         if (isChangingTrack /*&& false*/)
         {
-            float lambda = Mathf.Clamp01((timeSpent - timeTrackChangeBegining) / anim.GetCurrentAnimatorStateInfo(0).length);
+            float lambda = Mathf.Clamp01((timeSpent - timeTrackChangeBegining) / /*anim.GetCurrentAnimatorStateInfo(0).length*/ 0.5f);
 
             transform.position = Vector3.Lerp(mm.GetMinion(currentRail).transform.position, mm.GetMinion(goalRail).transform.position, lambda);           
-            transform.rotation = Quaternion.Lerp(mm.GetMinion(currentRail).transform.rotation, mm.GetMinion(goalRail).transform.rotation, lambda);           
+            transform.rotation = Quaternion.Lerp(mm.GetMinion(currentRail).transform.rotation, mm.GetMinion(goalRail).transform.rotation, lambda);
+
+            if (lambda == 1f)
+            {
+                TrackChanged();
+            }
         }
         else
         {
@@ -277,6 +282,7 @@ public class Train : MonoBehaviour
 
     public void EndJump()
     {
+        Debug.Log("jatéri");
         isJumping = false;
         if (hasSpinned)
         {
@@ -354,7 +360,10 @@ public class Train : MonoBehaviour
         {
             timeTrackChangeBegining = timeSpent;
             goalRail = newRail;
-            anim.SetTrigger("ChangeTrack");
+            if (!isJumping)
+            {
+                anim.SetTrigger("ChangeTrack");
+            }
             isChangingTrack = true;
             canChangeTrack = false;
         }
@@ -362,11 +371,14 @@ public class Train : MonoBehaviour
 
     public void TrackChanged()
     {
-        isChangingTrack = false;
-        timeTrackChangeBegining = 0;
-        mm.ChangeLeader(goalRail);
-        currentRail = goalRail;
-        goalRail = -1;
+        if (isChangingTrack)
+        {
+            isChangingTrack = false;
+            timeTrackChangeBegining = 0;
+            mm.ChangeLeader(goalRail);
+            currentRail = goalRail;
+            goalRail = -1;
+        }
     }
 
     void UpdateSpeedMult()
