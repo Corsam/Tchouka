@@ -265,6 +265,7 @@ public class Train : MonoBehaviour
 
     public void AnimalBrake()
     {
+        anim.SetTrigger("Brake");
         isAnimalBraking = true;
     }
 
@@ -300,6 +301,7 @@ public class Train : MonoBehaviour
 
     public void Brake()
     {
+        anim.SetTrigger("Brake");
         isBraking = true;
     }
 
@@ -508,6 +510,7 @@ public class Train : MonoBehaviour
 
     public void LaunchTchouTchou()
     {
+        anim.SetTrigger("Tchoutchou");
         if (isJumping && !hasSpinned)
         {
             //Debug.Log("ça tourne mdr");
