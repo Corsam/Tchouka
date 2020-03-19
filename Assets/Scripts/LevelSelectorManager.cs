@@ -108,7 +108,7 @@ public class LevelSelectorManager : MonoBehaviour
         LevelInfo infos = level.GetComponent<LevelInfo>();
 
         levelImage.sprite = infos.image;
-        levelTempsRecordText.text = infos.tempsRecord.ToString();
+        levelTempsRecordText.text = gm.tm.TimeDisplay(infos.tempsRecord, true);
         levelNoteRecordImage.sprite = GetNoteImage(infos.noteRecord);
     }
 

@@ -17,6 +17,8 @@ public class Train : MonoBehaviour
     public Text coinsDebugText;
     public Text timeDebugText;
 
+    public BarreAnnonces barreAnnonces;
+
     public GameObject pauseMenu;
 
     public Text StateDebugText;
@@ -164,7 +166,7 @@ public class Train : MonoBehaviour
 
         mm.leader.speed = currentSpeed;
 
-        speedDebugText.text = "Vitesse : " + (int)(currentSpeed * 2000) / 100 + " km/h";
+        //speedDebugText.text = "Vitesse : " + (int)(currentSpeed * 2000) / 100 + " km/h";
 
         if (isReparing)
         {
@@ -401,6 +403,7 @@ public class Train : MonoBehaviour
     {
         if (currentHealth <= threshold_health)
         {
+            barreAnnonces.DisplayAnnonce("TrainEndomage");
             currentHealthMult = healthMult_0;
         }
         else
@@ -430,7 +433,7 @@ public class Train : MonoBehaviour
 
     void UpdateHealthDisplay()
     {
-        healthDebugText.text = "Santé : " + currentHealth + " / " + maxHealth;
+        //healthDebugText.text = "Santé : " + currentHealth + " / " + maxHealth;
     }
 
     void UpdatePassagersDisplay()
@@ -445,20 +448,7 @@ public class Train : MonoBehaviour
     
     void UpdateTimeDisplay()
     {
-        int min = (int)timeSpent / 60;
-        int sec = (int)(timeSpent - min*60);
-        int cent = (int)((timeSpent - min*60 - sec)*100);
-
-        string secText = "";
-
-        if (sec < 10)
-        {
-            secText += "0";
-        }
-
-        secText += sec.ToString();
-
-        timeDebugText.text = min + ":" + secText /*+ "." +cent*/;
+        timeDebugText.text = lm.gm.tm.TimeDisplay(timeSpent, false);
     }
 
     void UpdateProgressionDisplay()
@@ -493,15 +483,19 @@ public class Train : MonoBehaviour
 
     public void LosePassagers(int passagers)
     {
-        if (passagersCount - passagers <= 0)
+        if (passagersCount != 0)
         {
-            passagersCount = 0;
-        }
-        else
-        {
-            passagersCount -= passagers;
-        }
-        UpdatePassagersDisplay();
+            barreAnnonces.DisplayAnnonce("ChutePassagers");
+            if (passagersCount - passagers <= 0)
+            {
+                passagersCount = 0;
+            }
+            else
+            {
+                passagersCount -= passagers;
+            }
+            UpdatePassagersDisplay();
+        }  
     }
 
     void HerdFlee(Animal herd)

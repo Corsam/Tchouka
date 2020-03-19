@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public MinionManager mm;
     public NoteManager nm;
+    public TimeManager tm;
     //public GameObject trainGO;
     public LevelManager lm;
     public MainMenuScriptCorsam mms;
