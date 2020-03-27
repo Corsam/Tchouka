@@ -28,6 +28,7 @@ public class Train : MonoBehaviour
     //public GameObject tchouCollider;
     Animator anim;
     public CameraPlayer cameraPlayer;
+    public AudioSource audioSource;
 
     int passagersCount = 0;
 
@@ -105,6 +106,10 @@ public class Train : MonoBehaviour
 
     public float timeNeeededToRepair = 3f;
     float timerRepairing = 0f;
+
+    float timerMoveSound = 0f;
+    public AudioClip[] moveSounds;
+
 
     void Update()
     {
@@ -201,6 +206,18 @@ public class Train : MonoBehaviour
         UpdatePosition();
         anim = GetComponent<Animator>();
     }
+
+    #region SOUND
+
+    void PlayMoveSound()
+    {
+        if (timerMoveSound > 1f/(currentSpeed + 2f))
+        {
+            audioSource.clip = 
+        }
+    }
+
+    #endregion SOUND
 
     void UpdatePosition()
     {
