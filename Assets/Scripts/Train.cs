@@ -27,6 +27,7 @@ public class Train : MonoBehaviour
 
     //public GameObject tchouCollider;
     Animator anim;
+    public CameraPlayer cameraPlayer;
 
     int passagersCount = 0;
 
@@ -274,6 +275,7 @@ public class Train : MonoBehaviour
     {
         anim.SetTrigger("Brake");
         isAnimalBraking = true;
+        cameraPlayer.SetCurrentTarget(CameraPlayer.SpeedParam.Speed0);
     }
 
     public void Jump()
@@ -299,6 +301,7 @@ public class Train : MonoBehaviour
         Debug.Log("On a tapé");
         timerCollision = 0;
         collided = true;
+        cameraPlayer.SetCurrentTarget(CameraPlayer.SpeedParam.Speed0);
     }
 
     void CollisionEnds()
@@ -311,11 +314,13 @@ public class Train : MonoBehaviour
     {
         anim.SetTrigger("Brake");
         isBraking = true;
+        cameraPlayer.SetCurrentTarget(CameraPlayer.SpeedParam.Speed0);
     }
 
     public void StopBrake()
     {
         isBraking = false;
+        cameraPlayer.SwitchToBackTarget();
     }
 
     public void SetSpeed(int speed)
@@ -325,14 +330,38 @@ public class Train : MonoBehaviour
         {
             case 0 :
                 SetSpeedLeverValue(speed0);
+                if (isBraking || isAnimalBraking || collided || isBoosting)
+                {
+                    cameraPlayer.SetBackTarget(CameraPlayer.SpeedParam.Speed0);
+                }
+                else
+                {
+                    cameraPlayer.SetBothTarget(CameraPlayer.SpeedParam.Speed0);
+                }
                 SetCoalConso(speed0_CoalConso);
                 break;
             case 1:
                 SetSpeedLeverValue(speed1);
+                if (isBraking || isAnimalBraking || collided || isBoosting)
+                {
+                    cameraPlayer.SetBackTarget(CameraPlayer.SpeedParam.Speed1);
+                }
+                else
+                {
+                    cameraPlayer.SetBothTarget(CameraPlayer.SpeedParam.Speed1);
+                }
                 SetCoalConso(speed1_CoalConso);
                 break;
             case 2:
                 SetSpeedLeverValue(speed2);
+                if (isBraking || isAnimalBraking || collided || isBoosting)
+                {
+                    cameraPlayer.SetBackTarget(CameraPlayer.SpeedParam.Speed2);
+                }
+                else
+                {
+                    cameraPlayer.SetBothTarget(CameraPlayer.SpeedParam.Speed2);
+                }
                 SetCoalConso(speed2_CoalConso);
                 break;
             default:
@@ -504,6 +533,7 @@ public class Train : MonoBehaviour
         {
             herd.brakeZone.gameObject.SetActive(false);
             isAnimalBraking = false;
+            cameraPlayer.SwitchToBackTarget();
             herd.forceFields.SetActive(true);
             herd.herdParticles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
@@ -540,9 +570,12 @@ public class Train : MonoBehaviour
     IEnumerator Boost()
     {
         isBoosting = true;
+        cameraPlayer.SetCurrentTarget(CameraPlayer.SpeedParam.Boost);
 
         yield return new WaitForSeconds(boostTime);
 
         isBoosting = false;
+        cameraPlayer.SwitchToBackTarget();
+
     }
 }
