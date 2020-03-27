@@ -28,7 +28,10 @@ public class Train : MonoBehaviour
     //public GameObject tchouCollider;
     Animator anim;
     public CameraPlayer cameraPlayer;
-    public AudioSource audioSource;
+
+
+    public AudioSource sourceMoveSounds;
+
 
     int passagersCount = 0;
 
@@ -207,17 +210,18 @@ public class Train : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    #region SOUND
+    /*#region SOUND
 
     void PlayMoveSound()
     {
         if (timerMoveSound > 1f/(currentSpeed + 2f))
         {
-            audioSource.clip = 
+            audioSource.clip = moveSounds[Random.Range(0, moveSounds.Length)];
+            audioSource.Play
         }
     }
 
-    #endregion SOUND
+    #endregion SOUND*/
 
     void UpdatePosition()
     {
