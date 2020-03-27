@@ -93,7 +93,7 @@ public class LevelManager : MonoBehaviour
     void DisplayEndInfo()
     {
         passagersText.text = passengersFinal.ToString();        
-        timeText.text = timeFinal.ToString();
+        timeText.text = gm.tm.TimeDisplay(timeFinal, true);
         noteImage.sprite = note;
         commentPassagersImage.sprite = comment_passager;
         commentTimeImage.sprite = comment_time;

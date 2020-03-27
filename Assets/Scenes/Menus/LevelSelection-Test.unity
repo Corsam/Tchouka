@@ -1489,10 +1489,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   es: {fileID: 498344412}
   notesSprites:
-  - {fileID: 21300000, guid: fd1e4e04af776dd45a73882e9dbfb8ee, type: 3}
-  - {fileID: 21300000, guid: 3aea8a58f7aa1364fb6bbc112179db75, type: 3}
-  - {fileID: 21300000, guid: 7526ad6aa3007d343898c5a8deb0aee1, type: 3}
-  - {fileID: 21300000, guid: 13c1975592bb4534593571c5e35a0b21, type: 3}
+  - {fileID: 21300000, guid: 190656da2f18f7e49812bf4b81a4a405, type: 3}
+  - {fileID: 21300000, guid: 41514f3e378a94b4d9962571a445f631, type: 3}
+  - {fileID: 21300000, guid: 49c98e5c754f2944b9c4ce2adfdc895f, type: 3}
+  - {fileID: 21300000, guid: 6b8a381bfbdaecd4d8659110556964e9, type: 3}
+  - {fileID: 21300000, guid: e9bf6191dbc3ee64faa337012c034862, type: 3}
   "fl\xE8chesSprites":
   - {fileID: 21300000, guid: 3bc3dcea68fe8fb4c99547c4e29907ee, type: 3}
   - {fileID: 21300000, guid: e69f544b363b1e7438a1554b70323060, type: 3}
