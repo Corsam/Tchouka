@@ -8,4 +8,5 @@ public class Animal : MonoBehaviour
     public AnimalBrakeZone brakeZone;
     public GameObject forceFields;
     public ParticleSystem herdParticles;
+    public AudioClip clip;
 }

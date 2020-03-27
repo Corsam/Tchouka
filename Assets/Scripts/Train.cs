@@ -30,9 +30,6 @@ public class Train : MonoBehaviour
     public CameraPlayer cameraPlayer;
 
 
-    public AudioSource sourceMoveSounds;
-
-
     int passagersCount = 0;
 
     float timeSpent = 0;
@@ -110,14 +107,33 @@ public class Train : MonoBehaviour
     public float timeNeeededToRepair = 3f;
     float timerRepairing = 0f;
 
+
+    public AudioSource sourceMoveSounds;
+    public AudioSource sourceTchouSound;
+    public AudioSource sourceCoalSound;
+    public AudioSource sourceBrakeSound;
+    public AudioSource sourceDamageSound;
+    public AudioSource sourceJumpSounds;
+    public AudioSource sourceCollectibleSound;
+    public AudioSource sourceAnimalSound;
+
     float timerMoveSound = 0f;
     public AudioClip[] moveSounds;
+    public AudioClip[] jumpSounds;
 
 
     void Update()
     {
         timeSpent += Time.deltaTime;
+        timerMoveSound += Time.deltaTime;
+
         UpdateTimeDisplay();
+
+        if (timerMoveSound > (-0.012 * currentSpeed + 0.33))
+        {
+            timerMoveSound = 0;
+            PlayMoveSound();
+        }
 
         UpdatePosition();
 
@@ -210,18 +226,30 @@ public class Train : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    /*#region SOUND
+    #region SOUND
 
     void PlayMoveSound()
     {
-        if (timerMoveSound > 1f/(currentSpeed + 2f))
-        {
-            audioSource.clip = moveSounds[Random.Range(0, moveSounds.Length)];
-            audioSource.Play
-        }
+        sourceMoveSounds.Stop();
+        sourceMoveSounds.clip = moveSounds[Random.Range(0, moveSounds.Length)];
+        sourceMoveSounds.Play();     
     }
 
-    #endregion SOUND*/
+    public void CollectibleSound(AudioClip clip)
+    {
+        sourceCollectibleSound.Stop();
+        sourceCollectibleSound.clip = clip;
+        sourceCollectibleSound.Play();
+    }
+
+    public void AnimalSound(AudioClip clip)
+    {
+        sourceAnimalSound.Stop();
+        sourceAnimalSound.clip = clip;
+        sourceAnimalSound.Play();
+    }
+
+    #endregion SOUND
 
     void UpdatePosition()
     {
@@ -296,13 +324,16 @@ public class Train : MonoBehaviour
     {
         anim.SetTrigger("Brake");
         isAnimalBraking = true;
-        cameraPlayer.SetCurrentTarget(CameraPlayer.SpeedParam.Speed0);
+        BrakeEffect();
     }
 
     public void Jump()
     {
         isJumping = true;
         anim.SetTrigger("Jump");
+        sourceJumpSounds.Stop();
+        sourceJumpSounds.clip = jumpSounds[0];
+        sourceJumpSounds.Play();
     }
 
     public void EndJump()
@@ -322,7 +353,7 @@ public class Train : MonoBehaviour
         Debug.Log("On a tapé");
         timerCollision = 0;
         collided = true;
-        cameraPlayer.SetCurrentTarget(CameraPlayer.SpeedParam.Speed0);
+        BrakeEffect();
     }
 
     void CollisionEnds()
@@ -335,7 +366,14 @@ public class Train : MonoBehaviour
     {
         anim.SetTrigger("Brake");
         isBraking = true;
+        BrakeEffect();
+    }
+
+    void BrakeEffect()
+    {
         cameraPlayer.SetCurrentTarget(CameraPlayer.SpeedParam.Speed0);
+        sourceBrakeSound.Stop();
+        sourceBrakeSound.Play();
     }
 
     public void StopBrake()
@@ -403,6 +441,8 @@ public class Train : MonoBehaviour
     public void RefillCoal()
     {
         currentCoalLevel = Mathf.Clamp(currentCoalLevel + coalReload, 0, 100);
+        sourceCoalSound.Stop();
+        sourceCoalSound.Play();
     }
 
     public void ChangeRail(int railShift)
@@ -464,6 +504,8 @@ public class Train : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        sourceDamageSound.Stop();
+        sourceDamageSound.Play();
         currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
         UpdateHealthMult();
         UpdateHealthDisplay();
@@ -552,6 +594,9 @@ public class Train : MonoBehaviour
     {
         if (herd != null)
         {
+            sourceAnimalSound.Stop();
+            sourceAnimalSound.clip = herd.clip;
+            sourceAnimalSound.Play();
             herd.brakeZone.gameObject.SetActive(false);
             isAnimalBraking = false;
             cameraPlayer.SwitchToBackTarget();
@@ -568,10 +613,15 @@ public class Train : MonoBehaviour
     public void LaunchTchouTchou()
     {
         anim.SetTrigger("Tchoutchou");
+        sourceTchouSound.Stop();
+        sourceTchouSound.Play();
         if (isJumping && !hasSpinned)
         {
             //Debug.Log("ça tourne mdr");
             anim.SetTrigger("Spin");
+            sourceJumpSounds.Stop();
+            sourceJumpSounds.clip = jumpSounds[1];
+            sourceJumpSounds.Play();
             hasSpinned = true;
         }
         else if (nearestGare != null)

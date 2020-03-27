@@ -5466,6 +5466,7 @@ MonoBehaviour:
   brakeZone: {fileID: 582356555661917806}
   forceFields: {fileID: 311901805621335585}
   herdParticles: {fileID: 311901806837995110}
+  clip: {fileID: 8300000, guid: ce80b41442fc72c40afc0cefda770fce, type: 3}
 --- !u!1 &582356556706135686
 GameObject:
   m_ObjectHideFlags: 0

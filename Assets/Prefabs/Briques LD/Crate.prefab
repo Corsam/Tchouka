@@ -87,6 +87,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinsToGive: 10
+  clip: {fileID: 8300000, guid: 36db4cbe84445614c921c9aac1a79ae4, type: 3}
 --- !u!95 &2812979367488431579
 Animator:
   serializedVersion: 3

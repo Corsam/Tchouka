@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
     public LevelManager lm;
     public MainMenuScriptCorsam mms;
     public LevelSelectorManager lsm;
+    AudioSource source;
+
+    public AudioClip[] clips;
+
 
     private bool firstLoad = true;
     private Train train;
@@ -25,13 +29,14 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         GameObject[] objs = GameObject.FindGameObjectsWithTag("GameManager");
-
         if (objs.Length > 1)
         {
             Destroy(this.gameObject);
         }
 
         DontDestroyOnLoad(this.gameObject);
+
+        source = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -130,11 +135,23 @@ public class GameManager : MonoBehaviour
         if (lm != null)
         {
             lm.enabled = true;
+            if (source.clip != clips[1])
+            {
+                source.Stop();
+                source.clip = clips[1];
+                source.Play();
+            }
         }
         mms = FindObjectOfType<MainMenuScriptCorsam>();
         if (mms != null)
         {
             mms.enabled = true;
+            if (source.clip != clips[0])
+            {
+                source.Stop();
+                source.clip = clips[0];
+                source.Play();
+            }
         }
         if (meMa != null)
         {
@@ -144,6 +161,12 @@ public class GameManager : MonoBehaviour
         if (lsm != null)
         {
             lsm.enabled = true;
+            if (source.clip != clips[0])
+            {
+                source.Stop();
+                source.clip = clips[0];
+                source.Play();
+            }
         }
     }
 
