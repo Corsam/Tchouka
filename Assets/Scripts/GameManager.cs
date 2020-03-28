@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public LevelManager lm;
     public MainMenuScriptCorsam mms;
     public LevelSelectorManager lsm;
-    AudioSource source;
+    AudioSource source; 
 
     public AudioClip[] clips;
 
@@ -122,6 +122,16 @@ public class GameManager : MonoBehaviour
             if (Input.GetButtonDown("Tchoutchou"))
             {
                 lm.Tchoutchou();
+            }
+
+            if (Input.GetButton("Speed1"))
+            {
+                lm.Vitesse1(true);
+            }
+
+            if (Input.GetButtonDown("Speed2") || Input.GetButtonDown("Speed0"))
+            {
+                lm.Vitesse1(false);
             }
         }
     }

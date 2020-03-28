@@ -6,7 +6,7 @@ public class Starting : MonoBehaviour
 {
     LevelManager lm;
     //bool tchoutchou;
-    public bool[] checklist;
+    public bool[] checklist = new bool[2];
 
     private void Start()
     {
@@ -15,10 +15,31 @@ public class Starting : MonoBehaviour
         //Debug.Log("Normalement c'est bon");
     }
 
+    public void Vitesse1(bool activated)
+    {
+        if (activated)
+        {
+            if (!checklist[0])
+            {
+                checklist[0] = true;
+            }
+        }
+        else
+        {
+            if (checklist[0])
+            {
+                checklist[0] = false;
+            }
+        }  
+    }
+
     public void Tchoutchou()
     {
-        checklist[0] = true;
-        LaunchGame();
+        if (checklist[0])
+        {
+            checklist[1] = true;
+            LaunchGame();
+        }
     }
 
     void LaunchGame()

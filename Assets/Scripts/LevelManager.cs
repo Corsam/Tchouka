@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,11 @@ public class LevelManager : MonoBehaviour
     public StopWall finalWall;
     public float distance;
 
+    public GameObject beginMenu;
     public GameObject endMenu;
+
+    public GameObject check1;
+    public GameObject check2;
 
     public Text passagersText;
     public Text timeText;
@@ -21,14 +26,22 @@ public class LevelManager : MonoBehaviour
 
     int passengersFinal;
     float timeFinal;
-    int score;
+    float score;
     int coins;
     Sprite note;
     Sprite comment_passager;
     Sprite comment_time;
 
+    public float passagersEnTout;
+    public float piècesEnTout;
+    public float TempsFixé;
+
+
     public Sprite[] commentsPassagers;
     public Sprite[] commentsTime;
+
+    private float passengerRatio;
+    private float timeRatio;
 
     private void Start()
     {
@@ -73,8 +86,36 @@ public class LevelManager : MonoBehaviour
     //TO DEFINE
     void DefineComments()
     {
-        comment_passager = commentsPassagers[Random.Range(0, commentsPassagers.Length)];
-        comment_time = commentsTime[Random.Range(0, commentsTime.Length)];
+        int pa;
+        int ti;
+
+        if (passengerRatio < 1 / 3f)
+        {
+            pa = 2;
+        }
+        else if (passengerRatio < 2 / 3f)
+        {
+            pa = 1;
+        }
+        else
+        {
+            pa = 0;
+        }
+
+        if (timeRatio < 1 / 3f)
+        {
+            ti = 2;
+        }
+        else if (passengerRatio < 2 / 3f)
+        {
+            ti = 1;
+        }
+        else
+        {
+            ti = 0;
+        }
+        comment_passager = commentsPassagers[pa];
+        comment_time = commentsTime[ti];
     }
 
     public void GetTrainInfo(int _passengers, float _time, int _coins)
@@ -87,7 +128,10 @@ public class LevelManager : MonoBehaviour
     //TO DEFINE
     public void CalculateScore()
     {
-        score = passengersFinal * 100 + (int)(18000 - timeFinal * 10);
+        passengerRatio = (float)passengersFinal / passagersEnTout;
+        timeRatio = TempsFixé / timeFinal;
+
+        score = passengerRatio + timeRatio + (float)coins/piècesEnTout;
     }
 
     void DisplayEndInfo()
@@ -105,9 +149,9 @@ public class LevelManager : MonoBehaviour
         gm.LoadLevel("LevelSelection-Test");
     }
 
-    public void Rejouer(string sceneName)
+    public void Rejouer()
     {
-        gm.LoadLevel(sceneName);
+        gm.LoadLevel(SceneManager.GetActiveScene().name);
     }
 
     public void EndPause()
@@ -126,6 +170,7 @@ public class LevelManager : MonoBehaviour
             }
         }
         //Debug.Log("C'est parti mon kiki !");
+        beginMenu.SetActive(false);
         train.Initialize();
         train.enabled = true;
         gm.SetGameState(GameManager.GameState.Ingame);
@@ -138,9 +183,39 @@ public class LevelManager : MonoBehaviour
         //Debug.Log("Normalement c'est bon");
     }
 
+    public void Vitesse1(bool activated)
+    {
+        if (activated)
+        {
+            if (!checklist[0])
+            {
+                checklist[0] = true;
+                check1.SetActive(true);
+            }
+        }
+        else
+        {
+            if (checklist[0])
+            {
+                checklist[0] = false;
+                check1.SetActive(false);
+            }
+        }
+    }
+
     public void Tchoutchou()
     {
-        checklist[0] = true;
+        if (checklist[0])
+        {
+            checklist[1] = true;
+            check2.SetActive(true);
+            StartCoroutine(Lancer());
+        }
+    }
+
+    IEnumerator Lancer()
+    {
+        yield return new WaitForSeconds(1);
         LaunchGame();
     }
 }

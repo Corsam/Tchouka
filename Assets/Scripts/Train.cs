@@ -211,7 +211,7 @@ public class Train : MonoBehaviour
 
     public void Initialize()
     {
-        SetSpeed(0);
+        SetSpeed(1);
         mm.leader.speed = 0;
         timeSpent = 0;
         UpdateTimeDisplay();

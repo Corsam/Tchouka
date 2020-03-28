@@ -10,6 +10,10 @@ public class MenuManager : MonoBehaviour
     GameManager gm;
     public EventSystem es;
     GameObject currentSelected;
+    public AudioSource source;
+
+    public AudioClip nav;
+    public AudioClip sel;
 
     private void Start()
     {
@@ -25,5 +29,17 @@ public class MenuManager : MonoBehaviour
     public void QuitGame()
     {
         gm.QuitGame();
+    }
+
+    public void NavigationSound()
+    {
+        source.clip = nav;
+        source.Play();
+    }
+
+    public void SelectionSound()
+    {
+        source.clip = sel;
+        source.Play();
     }
 }
